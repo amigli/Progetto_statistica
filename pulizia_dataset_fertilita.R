@@ -8,7 +8,7 @@ library(readxl)
 update.packages("readxl")
 
 #leggo il file Excel e lo salvo nella variabile data
-data <- read_excel("C:\\Users\\migli\\Desktop\\Università\\Magistrale\\Statistica e Analisi dei Dati\\Progetto\\fertilità.xlsx")
+data <- read_excel("C:\\Users\\migli\\Desktop\\Università\\Magistrale\\Statistica e Analisi dei Dati\\progetto_statistica\\dataset\\fertilità.xlsx")
 
 #visualizzo il contenuto di data in una finestra separata in modo da avere una visualizzazione più completa
 View(data)
