@@ -8,7 +8,7 @@ library(readxl)
 update.packages("readxl")
 
 #leggo il file Excel e lo salvo nella variabile data
-data <- read_excel("C:\\Users\\migli\\Desktop\\Università\\Magistrale\\Statistica e Analisi dei Dati\\progetto_statistica\\dataset\\nascite.xlsx")
+data <- read_excel("dataset/nascite.xlsx")
 
 #visualizzo il dataset
 View(data)
@@ -37,9 +37,8 @@ data[40, 1] <- NA
 
 #sposto i valori dalla seconda colonna alla prima laddove ci siano valori NA
 data$Col2 <- ifelse(is.na(data$Col2), data$Col3, data$Col2)
-data$Col3 <- NULL
 
-#essendo che la seconda colonna adesso contiene solo valori nulli, posso eliminarla
+#elimino la seconda colonna in quanto non è più necessaria
 data <- data[, -2]
 
 #rinomino le colonne nel modo opportuno 
@@ -61,6 +60,4 @@ library(writexl)
 update.packages("writexl")
 
 #salvo il file Excel
-# Imposta una nuova directory di lavoro
-setwd("C:\\Users\\migli\\Desktop\\Università\\Magistrale\\Statistica e Analisi dei Dati\\Progetto")
-write_xlsx(data, "nascite_pulito.xlsx")
+write_xlsx(data, "dataset_puliti/nascite_pulito.xlsx")
