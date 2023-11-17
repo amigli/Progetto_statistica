@@ -8,10 +8,13 @@ library(readxl)
 update.packages("readxl")
 
 #leggo il file Excel e lo salvo nella variabile data
-data <- read_excel("C:\\Users\\migli\\Desktop\\Università\\Magistrale\\Statistica e Analisi dei Dati\\progetto_statistica\\dataset\\fertilità.xlsx")
+data <- read_excel("dataset/fertilità.xlsx")
 
 #visualizzo il contenuto di data in una finestra separata in modo da avere una visualizzazione più completa
 View(data)
+
+#rinomino le colonne in modo da agevolare la manipolazione e la modifica dei valori
+colnames(data) <- c("Col1", "Col2", "Col3", "Col4", "Col5", "Col6", "Col7", "Col8", "Col9", "Col10", "Col11", "Col12", "Col13", "Col14", "Col15", "Col16", "Col17")  # Assegno nomi più brevi alle colonne
 
 #elimino le prime due righe, in quanto contenenti descrizioni
 data <- tail(data, -2)
@@ -31,18 +34,13 @@ data <- data[-2, ]
 # imposto il valore nella 40esima riga e 1a colonna a NA perché contiene l'intestazione dei paesi nella colonna successiva 
 data[40, 1] <- NA
 
-#controllo le intestazioni delle colonne in modo da poterle manipolare più facilmente
-colonne <- colnames(data)
-print(colonne)
+#elimino la terza colonna in quanto presenta solo valori NA
+data <- data[, -3]
 
-#rinomino le colonne in modo da agevolare la manipolazione e la modifica dei valori
-colnames(data) <- c("Col1", "Col2", "Col3", "Col4", "Col5", "Col6", "Col7", "Col8", "Col9", "Col10", "Col11", "Col12", "Col13", "Col14", "Col15")  # Assegno nomi più brevi alle colonne
+#sposto i valori dalla seconda colonna (Col3) alla prima (Col2) laddove ci siano valori NA
+data$Col2 <- ifelse(is.na(data$Col2), data$Col3, data$Col2)
 
-#sposto i valori dalla seconda colonna alla prima laddove ci siano valori NA
-data$Col1 <- ifelse(is.na(data$Col1), data$Col2, data$Col1)
-data$Col2 <- NULL
-
-#essendo che la seconda colonna adesso contiene solo valori nulli, posso eliminarla
+#elimino la seconda colonna in quanto non è più necessaria
 data <- data[, -2]
 
 #rinomino le colonne nel modo opportuno 
@@ -64,6 +62,4 @@ library(writexl)
 update.packages("writexl")
 
 #salvo il file Excel
-# Imposta una nuova directory di lavoro
-setwd("C:\\Users\\migli\\Desktop\\Università\\Magistrale\\Statistica e Analisi dei Dati\\Progetto")
-write_xlsx(data, "fertilita_pulito.xlsx")
+write_xlsx(data, "dataset_puliti/fertilita_pulito.xlsx")
