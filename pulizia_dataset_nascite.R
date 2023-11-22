@@ -47,6 +47,59 @@ colnames(data) <- c("Country", "2010", "2011", "2012", "2013", "2014", "2015", "
 #a questo punto, posso anche eliminare la prima riga che contiene gli anni, dato che sono stati impostati come nomi delle colonne
 data <- data[-1, ]
 
+# inserisco i dati mancanti
+data[1, "2021"] <- "298.5" # Australia
+data[4, "2021"] <- "373.7" # Canada
+data[5, "2021"] <- "229.1" # Chile
+data[20, "2021"] <- "818.5" # Japan
+data[21, "2021"] <- "289" # Korea 
+data[25, "2021"] <- "1880" # Mexico
+data[37, "2021"] <- "677.2" # United Kingdom
+
+# Argentina
+data[39, "2010"] <- "734.5"
+data[39, "2011"] <- "739.3"
+data[39, "2012"] <- "743.8"
+data[39, "2013"] <- "747.4"
+data[39, "2014"] <- "749.6"
+data[39, "2015"] <- "750.3"
+data[39, "2020"] <- "636"
+data[39, "2021"] <- "629.4"
+
+# Brazil
+data[40, "2019"] <- "2890"
+data[40, "2021"] <- "2760"
+
+# India
+data[44, "2010"] <- "26600"
+data[44, "2011"] <- "26340"
+data[44, "2012"] <- "26030"
+data[44, "2013"] <- "25740"
+data[44, "2014"] <- "24900"
+data[44, "2015"] <- "24830"
+data[44, "2020"] <- "23140"
+data[44, "2021"] <- "23110"
+
+# Peru
+data[45, "2010"] <- "617.6"
+data[45, "2011"] <- "613.2"
+data[45, "2012"] <- "602.8"
+data[45, "2013"] <- "592.9"
+data[45, "2014"] <- "584.7"
+data[45, "2015"] <- "577.6"
+
+# Russia
+data[47, "2015"] <- "1940"
+data[47, "2016"] <- "1890"
+data[47, "2017"] <- "1690"
+data[47, "2018"] <- "1610"
+data[47, "2019"] <- "1490"
+data[47, "2020"] <- "1440"
+data[47, "2021"] <- "1400"
+
+# South Africa
+data[48, "2021"] <- "1180"
+
 #stampo il dataframe per verificare che tutto sia stato modificato correttamente
 View(data)
 
