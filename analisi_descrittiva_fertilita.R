@@ -621,6 +621,27 @@ var(dati_2021)
 sd(dati_2021)
 #Un po' più alti rispetto al 2020.
 
+#________________________________________________________________________
+#Misuro la simmetria o meno di una distribuzione di frequenze con skewness
+#Questo si fa per l'intero set di dati
+library(e1071)
+
+#Trasformo il dataset in un vettore numerico per poter calcolare skewness
+dati_numerici <- as.numeric(as.character(unlist(data[, -1])))
+dati_numerici
+
+#Calcolo la skewness
+skew <- skewness(dati_numerici)
+skew
+#Essendo che è maggiore di 0, significa che c'è asimmetria positiva.
+#Un valore positivo della skewness indica che la coda della distribuzione 
+#è più lunga a destra rispetto alla coda sinistra, cioè ci sono più dati 
+#superiori alla media che spingono la coda in quella direzione.
+
+#_________________________________________________________________________
+
+
+
 
 
 
