@@ -1,5 +1,6 @@
 #analisi descrittiva del dataset sulla fertilità
 library(readxl)
+library(writexl)
 data <- read_excel("C:/Users/migli/Desktop/Università/Magistrale/Statistica e Analisi dei Dati/progetto_statistica/dataset_puliti/fertilita_pulito.xlsx")
 View(data)
 
@@ -23,6 +24,9 @@ colonne_numeriche
 #Arrotondo i valori alla seconda cifra decimale
 data[, nomi_colonne_numeriche] <- round(data[nomi_colonne_numeriche], 2)
 View(data)
+
+#Salvo il dataset con i valori arrotondati
+write_xlsx(data, "dataset_puliti/fertilita_arrotondato.xlsx")
 
 #________________________________________________________________________
 
