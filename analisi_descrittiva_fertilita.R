@@ -656,6 +656,18 @@ curtosi
 #che ci sono Paesi con tassi di natalità significativamente superiori o 
 #inferiori rispetto alla media.
 
+momento_ordine_2 <- var(dati_numerici)
+momento_ordine_4 <- moment(dati_numerici, order = 4)
+
+b2 <- (momento_ordine_4)/(momento_ordine_2^2)
+b2
+y2 <- b2-3
+y2
+
+#Essendo che b2 è maggiore di 3 e y2 è maggiore di 0, la distribuzione
+#di frequenze si dice leptocurtica, cioè la distribuzione dei dati è più
+#piccata di una normale.
+
 #Rappresento graficamente le distribuzioni normale e quella dei dati
 
 # Creo un vettore di valori per la curva di densità
