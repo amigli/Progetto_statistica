@@ -641,22 +641,35 @@ skew
 #Un valore positivo della skewness indica che la coda della distribuzione 
 #è più lunga a destra rispetto alla coda sinistra, cioè ci sono più dati 
 #superiori alla media che spingono la coda in quella direzione.
+#Questo perché ci sono dei Paesi con un numero di nascite superiori alla 
+#media. La skewness si concentra sull'asimmetria della distribuzione.
 
 #_________________________________________________________________________
 
+#Per valutare meglio la skewness, è importante anche la curtosi perché
+#così si valuta quanto i dati si concentrano nella coda della skewness.
+curtosi <- kurtosis(dati_numerici)
+curtosi
 
+#Se la curtosi è positiva come in questo caso, significa che ci sono code 
+#più pesanti rispetto a una distribuzione normale. Ciò potrebbe indicare 
+#che ci sono Paesi con tassi di natalità significativamente superiori o 
+#inferiori rispetto alla media.
 
+#Rappresento graficamente le distribuzioni normale e quella dei dati
 
-
-
-
-
-
-
-
-
-
-
-
-
-
+# Creo un vettore di valori per la curva di densità
+x <- seq(min(dati_numerici) - 1, max(dati_numerici) + 1, length = 100)
+# Calcolo la densità per la distribuzione normale
+dens_normale <- dnorm(x, mean = mean(dati_numerici), sd = sd(dati_numerici))
+# Calcolo la densità per i nostri dati
+dens_dati <- density(dati_numerici)$y
+# Creo il grafico di densità
+plot(x, dens_normale, type = "l", col = "blue", lwd = 2, ylim = c(0, max(dens_normale, dens_dati)),
+     main = "Confronto densità tra la distribuzione Normale e quella dei dati", xlab = "Valori", ylab = "Densità")
+# Aggiungo la curva di densità per i dati
+lines(density(dati_numerici), col = "red", lwd = 2)
+# Aggiungi una legenda
+legend("topright", legend = c("Distribuzione Normale", "Distribuzione dei dati"), col = c("blue", "red"), lty = 1, cex = 0.8)
+# Aggiungo una linea per indicare la media
+abline(v = mean(dati_numerici), col = "green", lty = 2)
