@@ -1,6 +1,11 @@
-#analisi descrittiva del dataset sulla fertilità
+#ANALISI DESCRITTIVA DEL DATASET SULLA FERTILITA'
+
+#Importiamo le librerie necessarie
 library(readxl)
 library(writexl)
+library(e1071)
+
+#Leggo il file Excel
 data <- read_excel("C:/Users/migli/Desktop/Università/Magistrale/Statistica e Analisi dei Dati/progetto_statistica/dataset_puliti/fertilita_pulito.xlsx")
 View(data)
 
@@ -8,11 +13,11 @@ View(data)
 colonne_numeriche <- sapply(data[, -1], is.numeric)
 print(colonne_numeriche)
 
-#Faccio delle operazioni preliminari per poter operare più facilmente sul dataset
+#Faccio delle operazioni preliminari per poter operare più facilmente 
+#sul dataset
 # Estraggo i nomi delle colonne per le operazioni successive
 nomi_colonne_numeriche <- names(colonne_numeriche)
 nomi_colonne_numeriche
-
 
 # Utilizzo lapply per convertire le colonne in numerico
 data[, nomi_colonne_numeriche] <- lapply(data[, nomi_colonne_numeriche], as.numeric)
@@ -28,26 +33,12 @@ View(data)
 #Salvo il dataset con i valori arrotondati
 write_xlsx(data, "dataset_puliti/fertilita_arrotondato.xlsx")
 
-#________________________________________________________________________
-
-#Fare un grafico con le medie tra tutti i Paesi anno per anno
-#Scrivere le cose nella documentazione, trarne le conclusioni
-
-#Calcolo la media per ogni anno
-media_per_anno <- colMeans(data[, -1])
-media_per_anno
-
-#Rappresento tutto sotto forma di serie temporale
-media_anni <- ts(media_per_anno, start = 2010, frequency = 1)
-
-#Creo il grafico relativo a questa serie temporale
-plot(media_anni, main="Media dei bambini nati per donna anno per anno", xlab="Anno", ylab="Valori", col="blue", type="o")
 
 #________________________________________________________________________
+#       FREQUENZE RELATIVE E ASSOLUTE SULL'INTERO SET DI DATI
+#________________________________________________________________________
 
-#Funzione di distribuzione ogni 3 anni
-#commentare nella documentazione
-
+#Stampo il minimo e il massimo del set di dati
 print(min(data[, -1]))
 print(max(data[, -1]))
 
@@ -55,9 +46,52 @@ print(max(data[, -1]))
 #tra 0 e 1.49 (1 bambino in media per donna), essendo che il valore minimo è 0.81
 #tra 1.50 e 2.49 (2 bambini in media per donna)
 #dopo 2.50 (3 bambini in media per donna) essendo che il valore massimo è 3.11
-intervalli <- c(0.5, 1.49, 2.49, 3.49) 
+intervalli <- c(0.5, 1.5, 2.5, 3.5) 
 
-#Divido i dati in 3 intervalli, ciascuno di 3 anni
+#Vediamo quante istanze ci sono in ciascun range con un istogramma
+hist(dati_numerici, breaks = intervalli, freq = TRUE,
+     ylim = c(0, max(frequenzeA)+92),
+     col = c("red", "blue", "green"), border = "black",
+     main = "Media bambini per donna tra il 2010 e il 2021",
+     xlab = "Range di valori medi", ylab = "Frequenza assoluta")
+
+#Costruiamo anche il grafico a torta per avere una più chiara
+#interpretazione con le percentuali.
+pie(table(cut(dati_numerici, breaks = intervalli, 
+              labels = c("0.5 <= x < 1.5",
+                         "1.5 <= x < 2.5",
+                         "2.5 <= x < 3.5"))), 
+    col = c("red", "blue", "green"), 
+    main = "Rappresentazione percentuali intervalli")
+
+#Facciamo lo stesso grafico con le frequenze relative
+hist(dati_numerici, breaks = intervalli, freq = FALSE,
+     ylim = c(0, 1),
+     col = c("red", "blue", "green"), border = "black",
+     main = "Media bambini per donna tra il 2010 e il 2021",
+     xlab = "Range di valori medi", ylab = "Frequenza relativa")
+
+#Calcolo le frequenze assolute per l'intero set di dati per intervalli
+frequenzeA <- table(cut(dati_numerici, breaks = intervalli))
+
+#Calcolo le frequenze assolute cumulate per l'intero set di dati tenendo
+#conto sempre degli intervalli
+cumsum(frequenzeA)
+
+#Calcolo le frequenze relative per l'intero set di dati per intervalli 
+frequenzeR <- table(cut(dati_numerici, breaks = intervalli))/length(dati_numerici)
+
+#Calcolo le frequenze relative cumulate per l'intero set di dati tenendo
+#conto sempre degli intervalli
+cumsum(frequenzeR)
+
+
+
+#________________________________________________________________________
+#                       DIVISIONE IN 3 RANGE DI ANNI
+#________________________________________________________________________
+
+#Divido i dati in 3 intervalli, ciascuno di 4 anni
 dati_2010_2013 <- data[, c("2010", "2011", "2012", "2013")]
 dati_2014_2017 <- data[, c("2014", "2015", "2016", "2017")]
 dati_2018_2021 <- data[, c("2018", "2019", "2020", "2021")]
@@ -77,92 +111,6 @@ cumulateA_10_13 <- cumsum(frequenzeA_10_13)
 cumulateA_14_17 <- cumsum(frequenzeA_14_17)
 cumulateA_18_21 <- cumsum(frequenzeA_18_21)
 
-#Vediamo quante istanze ci sono di ciascun range con un istogramma
-#Ne costruiamo uno per ogni anno
-hist(dati_2010_2013, breaks = intervalli, freq = TRUE,
-     ylim = c(0, max(frequenzeA_10_13) + 20),
-     col = c("red", "blue", "green"), border = "black",
-     main = "Media bambini per donna tra il 2010 e il 2013",
-     xlab = "Range di valori medi", ylab = "Frequenza assoluta")
-
-hist(dati_2014_2017, breaks = intervalli, freq = TRUE,
-     ylim = c(0, max(frequenzeA_14_17) + 20),
-     col = c("red", "blue", "green"), border = "black",
-     main = "Media bambini per donna tra il 2014 e il 2017",
-     xlab = "Range di valori medi", ylab = "Frequenza assoluta")
-
-hist(dati_2018_2021, breaks = intervalli, freq = TRUE,
-     ylim = c(0, max(frequenzeA_18_21) + 20),
-     col = c("red", "blue", "green"), border = "black",
-     main = "Media bambini per donna tra il 2018 e il 2021",
-     xlab = "Range di valori medi", ylab = "Frequenza assoluta")
-
-#Questi grafici in basso sono come gli istogrammi fatti prima
-#La differenza sta nel fatto che negli istogrammi si ragiona a range
-#Qui, invece, i valori vengono direttamente arrotondati
-#Rappresentano le frequenze assolute anno per anno
-barplot(frequenzeA_10_13, xlab = "Numero di figli in media per donna tra il 2010 e il 2013", 
-        col=1:3, names.arg = c("1", "2", "3"), 
-        ylim = c(0, max(frequenzeA_10_13) + 20))
-frequenzeA_10_13
-barplot(frequenzeA_14_17, xlab = "Numero di figli in media per donna tra il 2014 e il 2017", 
-        col=1:3, names.arg = c("1", "2", "3"),
-        ylim = c(0, max(frequenzeA_14_17) + 20))
-frequenzeA_14_17
-barplot(frequenzeA_18_21, xlab = "Numero di figli in media per donna tra il 2018 e il 2021", 
-        col=1:3, names.arg = c("1", "2", "3"),
-        ylim = c(0, max(frequenzeA_18_21) + 20))
-
-#Faccio una tabella di contingenza
-contingenza_assolute <- cbind(frequenzeA_10_13, frequenzeA_14_17, frequenzeA_18_21)
-contingenza_assolute
-
-#Frequenza assoluta congiunta
-#La traspongo in modo da avere su ogni barra i dati giusti
-#Nella prima barra, ci sono 56, 46 e 56 per tutte le triennali
-#Nella seconda barra, ci sono 131, 146 e 136 per tutte le triennali
-#Nella terza barra, ci sono 9, 4 e 4 per tutte le triennali
-#Infatti, la somma della prima deve fare 56+46+56=158, che si trova ecc...
-barplot(
-  t(contingenza_assolute),
-  col = c("blue", "green", "red"),
-  legend = c("2010-2013", "2014-2017", "2018-2021"),
-  names.arg = c("1 figlio", "2 figli", "3 figli")
-)
-
-#Frequenza relativa condizionata (range anni | numero figli)
-#Sono espressi diversamente i dati in questo caso:
-#Per 1 figlio, ci sono tutti e 3 gli anni (56, 46 e 56) messi a confronto
-#Così via anche per gli altri valori
-barplot(
-  t(contingenza_assolute),
-  beside = TRUE,
-  col = c("blue", "green", "red"),
-  names.arg = c("1 figlio", "2 figli", "3 figli"),
-  legend = c("2010-2013", "2014-2017", "2018-2021"),
-  xlab = "Numero di figli in media per donna",
-  ylab = "Frequenza assoluta",
-  main = "Frequenze assolute per intervallo di anni",
-  ylim = c(0, max(matrice_assolute) + 1)
-)
-
-#Distribuzione di frequenza marginale del numero di figli
-#Qui vediamo la totalità di istanze per tutti gli anni messi insieme
-freqMarginaleFigli <- margin.table(contingenza_assolute, 1)
-
-#Grafico per la frequenza assoluta marginale
-#Questo grafico rappresenta il totale delle istanze per ciascun numero
-#di figli medio per donna.
-barplot(freqMarginaleFigli, 
-        main = "Frequenza assoluta marginale del numero di figli",
-        col = c("red", "green", "blue"),
-        names.arg = c("1 figlio", "2 figli", "3 figli"))
-
-
-#______________________________________________________________________
-
-#fare lo stesso anche per le frequenze relative
-
 #Calcolo le frequenze relative per ognuno
 frequenzeR_10_13 <- table(cut(dati_2010_2013, breaks = intervalli))/length(dati_2010_2013)
 frequenzeR_14_17 <- table(cut(dati_2014_2017, breaks = intervalli))/length(dati_2014_2017)
@@ -173,58 +121,94 @@ cumulateR_10_13 <- cumsum(frequenzeR_10_13)
 cumulateR_14_17 <- cumsum(frequenzeR_14_17)
 cumulateR_18_21 <- cumsum(frequenzeR_18_21)
 
-#Vediamo quante istanze ci sono di ciascun range con un istogramma
-#Ne costruiamo uno per ogni anno
-#Alla fine è uguale a quello delle frequenze assolute
-hist(dati_2010_2013, breaks = intervalli, freq = FALSE,
-     ylim = c(0, max(frequenzeR_10_13) + 0.2),
+#Vedo quante istanze ci sono di ciascun range con un istogramma, cioè
+#la frequenza assoluta. Ne costruisco uno per ogni quadriennio
+hist(dati_2010_2013, breaks = intervalli, freq = TRUE,
+     ylim = c(0, max(frequenzeA_10_13) + 20),
      col = c("red", "blue", "green"), border = "black",
      main = "Media bambini per donna tra il 2010 e il 2013",
      xlab = "Range di valori medi", ylab = "Frequenza assoluta")
 
-hist(dati_2014_2017, breaks = intervalli, freq = FALSE,
-     ylim = c(0, max(frequenzeR_14_17) + 0.2),
+hist(dati_2014_2017, breaks = intervalli, freq = TRUE,
+     ylim = c(0, max(frequenzeA_14_17) + 45),
      col = c("red", "blue", "green"), border = "black",
      main = "Media bambini per donna tra il 2014 e il 2017",
      xlab = "Range di valori medi", ylab = "Frequenza assoluta")
 
-hist(dati_2018_2021, breaks = intervalli, freq = FALSE,
-     ylim = c(0, max(frequenzeR_18_21) + 0.2),
+hist(dati_2018_2021, breaks = intervalli, freq = TRUE,
+     ylim = c(0, max(frequenzeA_18_21) + 20),
      col = c("red", "blue", "green"), border = "black",
      main = "Media bambini per donna tra il 2018 e il 2021",
      xlab = "Range di valori medi", ylab = "Frequenza assoluta")
 
-#Costruisco i grafici per ognuno
-#Sono uguali a quelli delle frequenze assolute, cambiano solo i valori su Y
-#Rappresentano i valori delle frequenze relative anno per anno
-barplot(frequenzeR_10_13, xlab = "Numero di figli in media per donna tra il 2010 e il 2013", 
-        col=1:3, names.arg = c("1", "2", "3"),
-        ylim = c(0, max(frequenzeR_10_13) + 0.2))
-frequenzeR_10_13
-barplot(frequenzeR_14_17, xlab = "Numero di figli in media per donna tra il 2014 e il 2017", 
-        col=1:3, names.arg = c("1", "2", "3"),
-        ylim = c(0, max(frequenzeR_14_17) + 0.2))
-frequenzeR_14_17
-barplot(frequenzeR_18_21, xlab = "Numero di figli in media per donna tra il 2018 e il 2021", 
-        col=1:3, names.arg = c("1", "2", "3"),
-        ylim = c(0, max(frequenzeR_18_21) + 0.2))
-frequenzeR_18_21
+#Allo stesso modo, vedo la frequenza relativa sempre con lo stesso grafico
+#Alla fine è uguale a quello delle frequenze assolute ma con le relative
+hist(dati_2010_2013, breaks = intervalli, freq = FALSE,
+     ylim = c(0, 1),
+     col = c("red", "blue", "green"), border = "black",
+     main = "Media bambini per donna tra il 2010 e il 2013",
+     xlab = "Range di valori medi", ylab = "Frequenza relativa")
 
-#faccio la tabella di contingenza
+hist(dati_2014_2017, breaks = intervalli, freq = FALSE,
+     ylim = c(0, 1),
+     col = c("red", "blue", "green"), border = "black",
+     main = "Media bambini per donna tra il 2014 e il 2017",
+     xlab = "Range di valori medi", ylab = "Frequenza relativa")
+
+hist(dati_2018_2021, breaks = intervalli, freq = FALSE,
+     ylim = c(0, 1),
+     col = c("red", "blue", "green"), border = "black",
+     main = "Media bambini per donna tra il 2018 e il 2021",
+     xlab = "Range di valori medi", ylab = "Frequenza relativa")
+
+#Faccio una tabella di contingenza per le frequenze assolute
+contingenza_assolute <- cbind(frequenzeA_10_13, frequenzeA_14_17, frequenzeA_18_21)
+contingenza_assolute
+
+#Distribuzione di frequenza assoluta marginale del numero di figli
+#Qui vediamo la totalità di istanze per tutti gli anni messi insieme
+freqMarginaleFigliA <- margin.table(contingenza_assolute, 1)
+
+#Faccio la tabella di contingenza anche per le frequenze relative
 contingenza_relative <- cbind(frequenzeR_10_13, frequenzeR_14_17, frequenzeR_18_21)
 contingenza_relative
+
+#Distribuzione di frequenza relativa marginale del numero di figli
+freqMarginaleFigliR <- margin.table(freqFigli, 1)
+
+#Frequenza assoluta congiunta
+#La traspongo in modo da avere su ogni barra i dati giusti
+#Nella prima barra, ci sono 58, 48 e 58 per tutti i quadrienni
+#Nella seconda barra, ci sono 130, 144 e 134 per tutti i quadrienni
+#Nella terza barra, ci sono 8, 4 e 4 per tutti i quadrienni
+#Infatti, la somma della prima deve fare 58+48+58=164, che si trova ecc...
+barplot(
+  t(contingenza_assolute),
+  col = c("blue", "green", "red"),
+  legend = c("2010-2013", "2014-2017", "2018-2021"),
+  names.arg = c("(0.5,1.5]", "(1.5,2.5]", "(2.5,3.5]")
+)
 
 #Frequenza relativa congiunta
 #La traspongo in modo da avere su ogni barra i dati giusti
 #Il ragionamento è lo stesso delle frequenze assolute
-#Proviamo il ragionamento per la prima barra:
-#0.28571429+0.23469388+0.28571429=0.80612246 che è l'altezza della prima barra
 barplot(
   t(contingenza_relative),
   col = c("blue", "green", "red"),
   legend = c("2010-2013", "2014-2017", "2018-2021"),
-  names.arg = c("1 figlio", "2 figli", "3 figli")
+  names.arg = c("(0.5,1.5]", "(1.5,2.5]", "(2.5,3.5]")
 )
+
+#Frequenze relative congiunte
+#Sarebbe la proporzione di ciascun elemento nella matrice rispetto alla 
+#somma totale degli elementi della matrice: ogni elemento viene diviso per
+#il numero totale di elementi.
+freqFigli <- prop.table(contingenza_assolute)
+freqFigli
+
+#Frequenze relative condizionate
+#Quadriennio | figli
+relativaCondizionata <- prop.table(contingenza_assolute,1)
 
 #Costruisco il grafico a barre
 #è uguale a quello delle frequenze assolute, ma con quelle relative
@@ -232,48 +216,39 @@ barplot(
   t(contingenza_relative),
   beside = TRUE,
   col = c("blue", "green", "red"),
-  names.arg = c("1", "2", "3"),
+  names.arg = c("(0.5,1.5]", "(1.5,2.5]", "(2.5,3.5]"),
   legend = c("2010-2013", "2014-2017", "2018-2021"),
   xlab = "Numero di figli in media per donna",
   ylab = "Frequenza relativa",
   main = "Frequenze relative per intervallo di anni",
-  ylim = c(0, max(contingenza_relative)+0.2)
+  ylim = c(0, 1)
 )
 
-#Frequenze relative congiunte
-#Sarebbe la proporzione di ciascun elemento nella matrice rispetto alla 
-#somma totale degli elementi della matrice: ogni elemento viene diviso per
-#il numero totale di elementi.
-freqFigli <- prop.table(contingenza_relative)
-freqFigli
 
-#Somma le istanze in base al numero di figli della tabella precedente
-margin.table(freqFigli, 1)
-#Questo viene rappresentato nel grafico sottostante, dove ogni colonna
-#del margin.table viene rappresentata da una barra
 
-#Frequenze relative congiunte
-barplot(
-  t(freqFigli),
-  col = c("blue", "green", "red"),
-  legend = c("2010-2013", "2014-2017", "2018-2021"),
-  names.arg = c("1 figlio", "2 figli", "3 figli")
-)
+#________________________________________________________________________
+#                       INDICE DI SINTESI: MEDIA
+#________________________________________________________________________
 
-#Vediamo anche la somma per le frequenze relative per numero di figli
-margin.table(contingenza_relative, 1)
+#Fare un grafico con le medie tra tutti i Paesi anno per anno
 
-#Grafico per la frequenza relativa marginale
-#è come quello per la frequenza assoluta, ovviamente però ci sono i valori
-#relativi sull'asse Y
-barplot(margin.table(contingenza_relative, 1), 
-        main = "Frequenza relativa marginale del numero di figli",
-        col = c("red", "green", "blue"),
-        names.arg = c("1 figlio", "2 figli", "3 figli"))
+#Calcolo la media per ogni anno
+media_per_anno <- colMeans(data[, -1])
+media_per_anno
 
-#_________________________________________________________________________
+#Rappresento tutto sotto forma di serie temporale
+media_anni <- ts(media_per_anno, start = 2010, frequency = 1)
 
-#Fare il boxplot per vedere eventuali valori anomali anno per anno
+#Creo il grafico relativo a questa serie temporale
+plot(media_anni, main="Numero medio di bambini nati per donna (2010-2021)", xlab="Anno", ylab="Valori", col="blue", type="o")
+
+
+
+#________________________________________________________________________
+#                                   BOXPLOT
+#________________________________________________________________________
+
+#Faccio i boxplot per vedere eventuali valori anomali anno per anno
 
 #ANNO 2010
 dati_2010 <- data[["2010"]]
@@ -507,6 +482,7 @@ boxplot(dati_2018, dati_2019, dati_2020, dati_2021,
 #Confronto tra primo e ultimo anno tramite il boxplot ad intaglio
 boxplot(dati_2010, dati_2021, notch = TRUE, 
         names = c("Anno 2010", "Anno 2021"), col = c("green", "orange"))
+
 #Vediamo se le mediane si sovrappongono
 #ANNO 2010
 IQR_2010 <- quantile(dati_2010, 0.75) - quantile(dati_2010, 0.25)
@@ -525,6 +501,10 @@ c(M1_2021, M2_2021)
 #significatività del 5% si può affermare che le mediane dei voti delle
 #due classi sono differenti.
 
+
+
+#________________________________________________________________________
+#                         INDICE DI SINTESI: MODA
 #________________________________________________________________________
 
 #Come fatto per la media, vediamo anche la moda nel corso del tempo
@@ -545,12 +525,17 @@ moda_anni <- ts(moda_per_anno, start = 2010, frequency = 1)
 plot(moda_anni, main="Moda dei bambini nati per donna anno per anno", 
      xlab="Anno", ylab="Valori", col="blue", type="o")
 
-#_________________________________________________________________________
+
+
+#________________________________________________________________________
+#                         INDICI DI DISPERSIONE:
+#                     VARIANZA E DEVIAZIONE STANDARD
+#________________________________________________________________________
+
 #Varianza anno per anno per vedere la dispersione dei dati
-#Anche qui, commentare nella documentazione
 #Tanto maggiore è la varianza tanto più i valori sono dispersi rispetto 
 #alla media
-#Calcoliamo la varianza anno per anno
+#Calcolo la varianza anno per anno
 
 #ANNO 2010
 mean(dati_2010)
@@ -625,11 +610,14 @@ var(dati_2021)
 sd(dati_2021)
 #Un po' più alti rispetto al 2020.
 
+
+
 #________________________________________________________________________
+#                                 SKEWNESS
+#________________________________________________________________________
+
 #Misuro la simmetria o meno di una distribuzione di frequenze con skewness
 #Questo si fa per l'intero set di dati
-library(e1071)
-
 #Trasformo il dataset in un vettore numerico per poter calcolare skewness
 dati_numerici <- as.numeric(as.character(unlist(data[, -1])))
 dati_numerici
@@ -644,7 +632,11 @@ skew
 #Questo perché ci sono dei Paesi con un numero di nascite superiori alla 
 #media. La skewness si concentra sull'asimmetria della distribuzione.
 
-#_________________________________________________________________________
+
+
+#________________________________________________________________________
+#                                   CURTOSI
+#________________________________________________________________________
 
 #Per valutare meglio la skewness, è importante anche la curtosi perché
 #così si valuta quanto i dati si concentrano nella coda della skewness.
