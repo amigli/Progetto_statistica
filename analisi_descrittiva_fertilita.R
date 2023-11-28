@@ -186,17 +186,9 @@ barplot(
   t(contingenza_assolute),
   col = c("blue", "green", "red"),
   legend = c("2010-2013", "2014-2017", "2018-2021"),
-  names.arg = c("(0.5,1.5]", "(1.5,2.5]", "(2.5,3.5]")
-)
-
-#Frequenza relativa congiunta
-#La traspongo in modo da avere su ogni barra i dati giusti
-#Il ragionamento è lo stesso delle frequenze assolute
-barplot(
-  t(contingenza_relative),
-  col = c("blue", "green", "red"),
-  legend = c("2010-2013", "2014-2017", "2018-2021"),
-  names.arg = c("(0.5,1.5]", "(1.5,2.5]", "(2.5,3.5]")
+  names.arg = c("(0.5,1.5]", "(1.5,2.5]", "(2.5,3.5]"),
+  main = "Frequenza assoluta congiunta",
+  xlab = "Numero di figli in media per donna"
 )
 
 #Frequenze relative congiunte
@@ -205,6 +197,19 @@ barplot(
 #il numero totale di elementi.
 freqFigli <- prop.table(contingenza_assolute)
 freqFigli
+
+#Frequenza relativa congiunta
+#La traspongo in modo da avere su ogni barra i dati giusti
+#Il ragionamento è lo stesso delle frequenze assolute
+barplot(
+  t(freqFigli),
+  ylim = c(0,1),
+  col = c("blue", "green", "red"),
+  legend = c("2010-2013", "2014-2017", "2018-2021"),
+  names.arg = c("(0.5,1.5]", "(1.5,2.5]", "(2.5,3.5]"),
+  main = "Frequenza relativa congiunta",
+  xlab = "Numero di figli in media per donna"
+)
 
 #Frequenze relative condizionate
 #Quadriennio | figli
@@ -220,7 +225,7 @@ barplot(
   legend = c("2010-2013", "2014-2017", "2018-2021"),
   xlab = "Numero di figli in media per donna",
   ylab = "Frequenza relativa",
-  main = "Frequenze relative per intervallo di anni",
+  main = "Frequenza relativa condizionata (Quadriennio | N. figli)",
   ylim = c(0, 1)
 )
 
