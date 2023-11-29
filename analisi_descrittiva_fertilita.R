@@ -9,31 +9,6 @@ library(e1071)
 data <- read_excel("C:/Users/migli/Desktop/Università/Magistrale/Statistica e Analisi dei Dati/progetto_statistica/dataset_puliti/fertilita_pulito.xlsx")
 View(data)
 
-# Verifico se le colonne sono in formato numerico
-colonne_numeriche <- sapply(data[, -1], is.numeric)
-print(colonne_numeriche)
-
-#Faccio delle operazioni preliminari per poter operare più facilmente 
-#sul dataset
-# Estraggo i nomi delle colonne per le operazioni successive
-nomi_colonne_numeriche <- names(colonne_numeriche)
-nomi_colonne_numeriche
-
-# Utilizzo lapply per convertire le colonne in numerico
-data[, nomi_colonne_numeriche] <- lapply(data[, nomi_colonne_numeriche], as.numeric)
-
-#Verifico se le colonne sono in formato numerico
-colonne_numeriche <- sapply(data[, -1], is.numeric)
-colonne_numeriche
-
-#Arrotondo i valori alla seconda cifra decimale
-data[, nomi_colonne_numeriche] <- round(data[nomi_colonne_numeriche], 2)
-View(data)
-
-#Salvo il dataset con i valori arrotondati
-write_xlsx(data, "dataset_puliti/fertilita_arrotondato.xlsx")
-
-
 #________________________________________________________________________
 #       FREQUENZE RELATIVE E ASSOLUTE SULL'INTERO SET DI DATI
 #________________________________________________________________________
