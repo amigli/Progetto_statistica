@@ -245,7 +245,8 @@ media_per_anno
 media_anni <- ts(media_per_anno, start = 2010, frequency = 1)
 
 #Creo il grafico relativo a questa serie temporale
-plot(media_anni, main="Numero medio di bambini nati per donna (2010-2021)", xlab="Anno", ylab="Valori", col="blue", type="o")
+plot(media_anni, main="Numero medio di bambini nati per donna (2010-2021)", 
+     xlab="Anno", ylab="Valore medio", col="blue", type="o")
 
 
 
@@ -270,6 +271,7 @@ boxplot(dati_2010,
 stats <- boxplot.stats(dati_2010)
 limite_superiore <- stats$stats[5]
 limite_superiore
+
 #A questo punto, è chiaro che vi è un solo outlier: Israel
 
 #ANNO 2011
@@ -474,15 +476,15 @@ limite_inferiore
 #DAL 2010 AL 2013
 boxplot(dati_2010, dati_2011, dati_2012, dati_2013, 
         names = c("Anno 2010", "Anno 2011", "Anno 2012", "Anno 2013"),
-        col = c("red", "blue", "green", "yellow"))
+        col = c("red", "lightblue", "green", "yellow"))
 #DAL 2014 AL 2017
 boxplot(dati_2014, dati_2015, dati_2016, dati_2017, 
         names = c("Anno 2014", "Anno 2015", "Anno 2016", "Anno 2017"),
-        col = c("red", "blue", "green", "yellow"))
+        col = c("red", "lightblue", "green", "yellow"))
 #DAL 2018 AL 2021
 boxplot(dati_2018, dati_2019, dati_2020, dati_2021, 
         names = c("Anno 2018", "Anno 2019", "Anno 2020", "Anno 2021"),
-        col = c("red", "blue", "green", "yellow"))
+        col = c("red", "lightblue", "green", "yellow"))
 
 #Confronto tra primo e ultimo anno tramite il boxplot ad intaglio
 boxplot(dati_2010, dati_2021, notch = TRUE, 
@@ -491,13 +493,13 @@ boxplot(dati_2010, dati_2021, notch = TRUE,
 #Vediamo se le mediane si sovrappongono
 #ANNO 2010
 IQR_2010 <- quantile(dati_2010, 0.75) - quantile(dati_2010, 0.25)
-M1_2010 <- quantile(dati_2010, 0.75) - 1.57*IQR_2010/sqrt(length(dati_2010))
-M2_2010 <- quantile(dati_2010, 0.75) + 1.57*IQR_2010/sqrt(length(dati_2010))
+M1_2010 <- quantile(dati_2010, 0.5) - 1.57*IQR_2010/sqrt(length(dati_2010))
+M2_2010 <- quantile(dati_2010, 0.5) + 1.57*IQR_2010/sqrt(length(dati_2010))
 
 #ANNO 2021
 IQR_2021 <- quantile(dati_2021, 0.75) - quantile(dati_2021, 0.25)
-M1_2021 <- quantile(dati_2021, 0.75) - 1.57*IQR_2021/sqrt(length(dati_2021))
-M2_2021 <- quantile(dati_2021, 0.75) + 1.57*IQR_2021/sqrt(length(dati_2021))
+M1_2021 <- quantile(dati_2021, 0.5) - 1.57*IQR_2021/sqrt(length(dati_2021))
+M2_2021 <- quantile(dati_2021, 0.5) + 1.57*IQR_2021/sqrt(length(dati_2021))
 
 c(M1_2010, M2_2010)
 c(M1_2021, M2_2021)
@@ -527,8 +529,8 @@ moda_per_anno
 moda_anni <- ts(moda_per_anno, start = 2010, frequency = 1)
 
 #Creo il grafico relativo a questa serie temporale
-plot(moda_anni, main="Moda dei bambini nati per donna anno per anno", 
-     xlab="Anno", ylab="Valori", col="blue", type="o")
+plot(moda_anni, main="Moda di bambini nati per donna (2010-2021)", 
+     xlab="Anno", ylab="Valore medio", col="blue", type="o")
 
 
 
@@ -615,6 +617,28 @@ var(dati_2021)
 sd(dati_2021)
 #Un po' più alti rispetto al 2020.
 
+varianza_per_anno <- sapply(data[, -1], var)
+varianza_per_anno
+
+devstandard_per_anno <- sapply(data[, -1], sd)
+devstandard_per_anno
+
+#Rappresento tutto sotto forma di serie temporale
+varianza_anni <- ts(varianza_per_anno, start = 2010, frequency = 1)
+devstandard_anni <- ts(devstandard_per_anno, start = 2010, frequency = 1)
+
+# Creo il grafico per la varianza 
+plot(varianza_anni, col = "blue", type = "o", ylab = "Varianza", 
+     xlab = "Anno", main = "Varianza e Deviazione Standard per Anno",
+     ylim = c(0,0.5))
+
+# Aggiungo la deviazione standard al grafico esistente
+lines(devstandard_anni, col = "red", type = "o")
+
+# Aggiungere una legenda
+legend("topright", legend = c("Varianza", "Deviazione Standard"), 
+       col = c("blue", "red"), lty = 1)
+
 
 
 #________________________________________________________________________
@@ -675,7 +699,7 @@ dens_normale <- dnorm(x, mean = mean(dati_numerici), sd = sd(dati_numerici))
 dens_dati <- density(dati_numerici)$y
 # Creo il grafico di densità
 plot(x, dens_normale, type = "l", col = "blue", lwd = 2, ylim = c(0, max(dens_normale, dens_dati)),
-     main = "Confronto densità tra la distribuzione Normale e quella dei dati", xlab = "Valori", ylab = "Densità")
+     xlab = "Valori", ylab = "Densità")
 # Aggiungo la curva di densità per i dati
 lines(density(dati_numerici), col = "red", lwd = 2)
 # Aggiungi una legenda
