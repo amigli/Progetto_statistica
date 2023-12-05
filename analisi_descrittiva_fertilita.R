@@ -218,7 +218,7 @@ relativaCondizionata <- prop.table(contingenza_assolute,1)
 #Costruisco il grafico a barre
 #è uguale a quello delle frequenze assolute, ma con quelle relative
 barplot(
-  t(contingenza_relative),
+  t(relativaCondizionata),
   beside = TRUE,
   col = c("blue", "green", "red"),
   names.arg = c("[0.5,1.5)", "[1.5,2.5)", "[2.5,3.5)"),
@@ -226,7 +226,8 @@ barplot(
   xlab = "Numero di figli in media per donna",
   ylab = "Frequenza relativa",
   main = "Frequenza relativa condizionata (Quadriennio | N. figli)",
-  ylim = c(0, 1)
+  ylim = c(0, 1),
+  legend.position = "top"
 )
 
 
