@@ -63,3 +63,19 @@ update.packages("writexl")
 
 #salvo il file Excel
 write_xlsx(data, "dataset_puliti/fertilita_pulito.xlsx")
+
+# Essendo i dati in formato character, li converto in numeric
+# Seleziono le colonne da convertire (escludendo la prima con i nomi dei paesi)
+columns_to_convert <- names(data)[-1]
+
+# Converto le colonne selezionate in formato numerico
+data[columns_to_convert] <- lapply(data[columns_to_convert], function(x) as.numeric(as.character(x)))
+
+# Arrotondo le colonne convertite alla seconda cifra decimale
+data[columns_to_convert] <- round(data[columns_to_convert], 2)
+
+# Visualizzo il dataset
+View(data)
+
+# Salvo il file excel con i dati convertiti
+write_xlsx(data, "dataset_puliti/fertilita_arrotondato.xlsx")
