@@ -42,8 +42,8 @@ dati_2010_2013 <- as.numeric(as.character(unlist(dati_2010_2013)))
 dati_2014_2017 <- as.numeric(as.character(unlist(dati_2014_2017)))
 dati_2018_2021 <- as.numeric(as.character(unlist(dati_2018_2021)))
 
-# Rimuovo la prima riga e la prima colonna 
-dati_senza_intestazioni <- data[-1, -1]
+# Rimuovo la prima colonna (dove sono presenti i Paesi)
+dati_senza_intestazioni <- data[, -1]
 
 # Converto i dati in un formato numerico
 dati_tot <- as.numeric(as.character(unlist(dati_senza_intestazioni)))
