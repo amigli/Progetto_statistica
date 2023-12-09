@@ -1,5 +1,4 @@
 library(readxl)
-library(ggplot2)
 
 data <- read_excel("dataset_puliti/nascite_arrotondato.xlsx")
 
@@ -23,6 +22,7 @@ cor(data[, -1]) #(?)
 # Variabile dipendente 2021, 
 # variabili indipendenti 2010-2011-2012-2013-2014-2015-2016-2017-2018-2019-2020 #
 
+# Creo il modello di regressione lineare multivariata
 model <- lm(data$`2021` ~ data$`2010` + data$`2011` + data$`2012` + data$`2013` + data$`2014` + 
             data$`2015` + data$`2016` + data$`2017` + data$`2018` + data$`2019` + data$`2020`, 
             data = data)
@@ -63,5 +63,14 @@ errore <- (abs(confronto$`Valori reali` - confronto$`Valori predetti`)/confronto
 
 # Facendo la media degli errori ottenuti, ottengo la percentuale di errore media
 mean(errore)
+
+# Verifico se i valori predetti sono maggiori, minori o uguali a quelli reali
+confronto$Comparison <- ifelse(confronto$`Valori predetti` > confronto$`Valori reali`, "Maggiore",
+                        ifelse(confronto$`Valori predetti`< confronto$`Valori reali`, "Minore", "Uguale"))
+
+# Conto i casi per ogni categoria
+table(confronto$Comparison)
+
+
 
 
