@@ -2,7 +2,6 @@
 
 #Importiamo le librerie necessarie
 library(readxl)
-library(writexl)
 library(e1071)
 
 #Leggo il file Excel
