@@ -40,3 +40,6 @@ plot(stime, residuiStandard,
      main="Residui standard rispetto ai valori stimati", 
      xlab="Valori stimati", ylab="Residui standard", pch=5, col="red")
 abline(h=0, col="blue", lty=2)
+
+#Coefficiente di determinazione
+summary(model)$r.square
