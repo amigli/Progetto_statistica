@@ -61,9 +61,16 @@ HI
 trHI <- sum(diag(HI))
 trHI
 
+
+#________________________________________________________________________
+#                             METODI GERARCHICI
+#________________________________________________________________________
+
+
 #________________________________________________________________________
 #                       METODO DEL LEGAME SINGOLO
 #________________________________________________________________________
+
 
 #Faccio il clustering sulla base della matrice delle distanze
 hls <- hclust(distanceMatrix, method = "single")
@@ -905,3 +912,30 @@ trB/trHI
 
 #Evidenzio gli 8 cluster nel dendrogramma
 rect.hclust(hls, k = 8, border = "red")
+
+
+#________________________________________________________________________
+#                           METODI NON GERARCHICI
+#________________________________________________________________________
+
+
+#________________________________________________________________________
+#                                   K-MEANS
+#________________________________________________________________________
+
+
+#Applico l'algoritmo k-means
+km <- kmeans (data[, -1], centers = 8 , iter.max = 20, nstart = 10)
+km
+
+#Calcolo la misura di non omogeneità statistica
+km$betweenss/km$totss
+
+#Calcolo la misura di non omogeneità totale
+km$totss
+
+#Calcolo la somma delle within
+km$tot.withinss
+
+#Calcolo la between
+km$betweenss
