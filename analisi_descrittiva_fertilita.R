@@ -16,6 +16,18 @@ View(data)
 print(min(data[, -1]))
 print(max(data[, -1]))
 
+# Seleziona solo le colonne numeriche
+data_numeric <- data[, sapply(data, is.numeric)]
+
+# Converti il frame dati in una matrice
+data_matrix <- as.matrix(data_numeric)
+
+#Calcolo la media
+mean(data_matrix)
+
+#Calcolo la deviazione standard
+sqrt(var(as.vector(data_matrix)))
+
 #Definisco gli intervalli, quindi
 #tra 0 e 1.49 (1 bambino in media per donna), essendo che il valore minimo è 0.81
 #tra 1.50 e 2.49 (2 bambini in media per donna)
