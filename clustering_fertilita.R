@@ -140,6 +140,7 @@ if(is.na(trH2))
 sum <- trH1 + trH2 
 trB <- trHI - sum
 trB/trHI
+sum
 
 #________________________________________________________________________
 
@@ -184,6 +185,7 @@ if(is.na(trH5))
 sum <- trH1 + trH2 + trH3 + trH4 + trH5
 trB <- trHI - sum
 trB/trHI
+sum
 
 #________________________________________________________________________
 
@@ -243,6 +245,7 @@ if(is.na(trH8))
 sum <- trH1 + trH2 + trH3 + trH4 + trH5 + trH6 + trH7 + trH8
 trB <- trHI - sum
 trB/trHI
+sum
 
 #Evidenzio gli 8 cluster nel dendrogramma
 rect.hclust(hls, k = 8, border = "red")
@@ -321,6 +324,7 @@ if(is.na(trH2))
 sum <- trH1 + trH2 
 trB <- trHI - sum
 trB/trHI
+sum
 
 #________________________________________________________________________
 
@@ -365,6 +369,7 @@ if(is.na(trH5))
 sum <- trH1 + trH2 + trH3 + trH4 + trH5
 trB <- trHI - sum
 trB/trHI
+sum
 
 #________________________________________________________________________
 
@@ -424,6 +429,7 @@ if(is.na(trH8))
 sum <- trH1 + trH2 + trH3 + trH4 + trH5 + trH6 + trH7 + trH8
 trB <- trHI - sum
 trB/trHI
+sum
 
 #Evidenzio gli 8 cluster nel dendrogramma
 rect.hclust(hls, k = 8, border = "red")
@@ -501,6 +507,7 @@ if(is.na(trH2))
 sum <- trH1 + trH2 
 trB <- trHI - sum
 trB/trHI
+sum
 
 #________________________________________________________________________
 
@@ -545,6 +552,7 @@ if(is.na(trH5))
 sum <- trH1 + trH2 + trH3 + trH4 + trH5
 trB <- trHI - sum
 trB/trHI
+sum
 
 #________________________________________________________________________
 
@@ -604,6 +612,7 @@ if(is.na(trH8))
 sum <- trH1 + trH2 + trH3 + trH4 + trH5 + trH6 + trH7 + trH8
 trB <- trHI - sum
 trB/trHI
+sum
 
 #Evidenzio gli 8 cluster nel dendrogramma
 rect.hclust(hls, k = 8, border = "red")
@@ -653,6 +662,7 @@ if(is.na(trH2))
 sum <- trH1 + trH2 
 trB <- trHI - sum
 trB/trHI
+sum
 
 #________________________________________________________________________
 
@@ -697,6 +707,7 @@ if(is.na(trH5))
 sum <- trH1 + trH2 + trH3 + trH4 + trH5
 trB <- trHI - sum
 trB/trHI
+sum
 
 #________________________________________________________________________
 
@@ -756,6 +767,7 @@ if(is.na(trH8))
 sum <- trH1 + trH2 + trH3 + trH4 + trH5 + trH6 + trH7 + trH8
 trB <- trHI - sum
 trB/trHI
+sum
 
 #Evidenzio gli 8 cluster nel dendrogramma
 rect.hclust(hls, k = 8, border = "red")
@@ -806,6 +818,7 @@ if(is.na(trH2))
 sum <- trH1 + trH2 
 trB <- trHI - sum
 trB/trHI
+sum
 
 #________________________________________________________________________
 
