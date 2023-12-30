@@ -26,6 +26,7 @@ nomi_paesi <- c("Australia", "Austria", "Belgium", "Canada", "Chile",
                      "Bulgaria", "Cina", "Croatia", "India", "Indonesia",
                      "Peru", "Romania", "Russia", "South Africa")
 
+
 #________________________________________________________________________
 #                         MATRICE DELLE DISTANZE
 #________________________________________________________________________
@@ -42,6 +43,7 @@ write_xlsx(distance_df, "matrice_distanze_fertilita.xlsx")
 
 #Calcolo quante sono le istanze totali
 length(distanceMatrix)
+
 
 #________________________________________________________________________
 #                   MATRICE DI NON OMOGENEITA' TOTALE
@@ -66,11 +68,9 @@ trHI
 #                             METODI GERARCHICI
 #________________________________________________________________________
 
-
 #________________________________________________________________________
 #                       METODO DEL LEGAME SINGOLO
 #________________________________________________________________________
-
 
 #Faccio il clustering sulla base della matrice delle distanze
 hls <- hclust(distanceMatrix, method = "single")
@@ -112,9 +112,6 @@ cat("Numero consigliato di cluster:", elbow_point, "\n")
 
 #________________________________________________________________________
 
-#Evidenziamo le partizioni con 2 cluster nel dendrogramma
-rect.hclust(hls, k = 2, border = "red")
-
 #Calcoliamo la misura di non omogeneità statistica tra i cluster
 taglio <- cutree (hls , k =2, h = NULL)
 num <- table (taglio)
@@ -141,6 +138,9 @@ sum <- trH1 + trH2
 trB <- trHI - sum
 trB/trHI
 sum
+
+#Evidenzio le partizioni con 2 cluster nel dendrogramma
+rect.hclust(hls, k = 2, border = "red")
 
 #________________________________________________________________________
 
@@ -186,6 +186,9 @@ sum <- trH1 + trH2 + trH3 + trH4 + trH5
 trB <- trHI - sum
 trB/trHI
 sum
+
+#Evidenzio le partizioni con 5 cluster nel dendrogramma
+rect.hclust(hls, k = 5, border = "red")
 
 #________________________________________________________________________
 
@@ -255,7 +258,6 @@ rect.hclust(hls, k = 8, border = "red")
 #                       METODO DEL LEGAME COMPLETO
 #________________________________________________________________________
 
-
 #Faccio il clustering sulla base della matrice delle distanze
 hls <- hclust(distanceMatrix, method = "complete")
 hls$height
@@ -296,9 +298,6 @@ cat("Numero consigliato di cluster:", elbow_point, "\n")
 
 #________________________________________________________________________
 
-#Evidenziamo le partizioni con 2 cluster nel dendrogramma
-rect.hclust(hls, k = 2, border = "red")
-
 #Calcoliamo la misura di non omogeneità statistica tra i cluster
 taglio <- cutree (hls , k =2, h = NULL)
 num <- table (taglio)
@@ -325,6 +324,9 @@ sum <- trH1 + trH2
 trB <- trHI - sum
 trB/trHI
 sum
+
+#Evidenzio le partizioni con 2 cluster nel dendrogramma
+rect.hclust(hls, k = 2, border = "red")
 
 #________________________________________________________________________
 
@@ -370,6 +372,9 @@ sum <- trH1 + trH2 + trH3 + trH4 + trH5
 trB <- trHI - sum
 trB/trHI
 sum
+
+#Evidenzio le partizioni con 5 cluster nel dendrogramma
+rect.hclust(hls, k = 5, border = "red")
 
 #________________________________________________________________________
 
@@ -479,9 +484,6 @@ cat("Numero consigliato di cluster:", elbow_point, "\n")
 
 #________________________________________________________________________
 
-#Evidenziamo le partizioni con 2 cluster nel dendrogramma
-rect.hclust(hls, k = 2, border = "red")
-
 #Calcoliamo la misura di non omogeneità statistica tra i cluster
 taglio <- cutree (hls , k =2, h = NULL)
 num <- table (taglio)
@@ -508,6 +510,9 @@ sum <- trH1 + trH2
 trB <- trHI - sum
 trB/trHI
 sum
+
+#Evidenzio le partizioni con 2 cluster nel dendrogramma
+rect.hclust(hls, k = 2, border = "red")
 
 #________________________________________________________________________
 
@@ -553,6 +558,9 @@ sum <- trH1 + trH2 + trH3 + trH4 + trH5
 trB <- trHI - sum
 trB/trHI
 sum
+
+#Evidenzio le partizioni con 5 cluster nel dendrogramma
+rect.hclust(hls, k = 5, border = "red")
 
 #________________________________________________________________________
 
@@ -617,10 +625,10 @@ sum
 #Evidenzio gli 8 cluster nel dendrogramma
 rect.hclust(hls, k = 8, border = "red")
 
+
 #________________________________________________________________________
 #                           METODO DEL CENTROIDE
 #________________________________________________________________________
-
 
 #Faccio il clustering sulla base della matrice delle distanze
 hls <- hclust(distanceMatrix, method = "centroid")
@@ -633,9 +641,6 @@ plot(hls, hang = -1, xlab = "Metodo gerarchico agglomerativo",
 axis(side = 4, at = round(c(0, hls$height), 2))
 
 #________________________________________________________________________
-
-#Evidenziamo le partizioni con 2 cluster nel dendrogramma
-rect.hclust(hls, k = 2, border = "red")
 
 #Calcoliamo la misura di non omogeneità statistica tra i cluster
 taglio <- cutree (hls , k =2, h = NULL)
@@ -663,6 +668,9 @@ sum <- trH1 + trH2
 trB <- trHI - sum
 trB/trHI
 sum
+
+#Evidenzio le partizioni con 2 cluster nel dendrogramma
+rect.hclust(hls, k = 2, border = "red")
 
 #________________________________________________________________________
 
@@ -708,6 +716,9 @@ sum <- trH1 + trH2 + trH3 + trH4 + trH5
 trB <- trHI - sum
 trB/trHI
 sum
+
+#Evidenzio le partizioni con 5 cluster nel dendrogramma
+rect.hclust(hls, k = 5, border = "red")
 
 #________________________________________________________________________
 
@@ -777,7 +788,6 @@ rect.hclust(hls, k = 8, border = "red")
 #                           METODO DELLA MEDIANA
 #________________________________________________________________________
 
-
 #Faccio il clustering sulla base della matrice delle distanze
 hls <- hclust(distanceMatrix, method = "median")
 hls$height
@@ -789,9 +799,6 @@ plot(hls, hang = -1, xlab = "Metodo gerarchico agglomerativo",
 axis(side = 4, at = round(c(0, hls$height), 2))
 
 #________________________________________________________________________
-
-#Evidenziamo le partizioni con 2 cluster nel dendrogramma
-rect.hclust(hls, k = 2, border = "red")
 
 #Calcoliamo la misura di non omogeneità statistica tra i cluster
 taglio <- cutree (hls , k =2, h = NULL)
@@ -819,6 +826,9 @@ sum <- trH1 + trH2
 trB <- trHI - sum
 trB/trHI
 sum
+
+#Evidenzio le partizioni con 2 cluster nel dendrogramma
+rect.hclust(hls, k = 2, border = "red")
 
 #________________________________________________________________________
 
@@ -863,6 +873,10 @@ if(is.na(trH5))
 sum <- trH1 + trH2 + trH3 + trH4 + trH5
 trB <- trHI - sum
 trB/trHI
+sum
+
+#Evidenzio i 5 cluster nel dendrogramma
+rect.hclust(hls, k = 5, border = "red")
 
 #________________________________________________________________________
 
@@ -922,6 +936,7 @@ if(is.na(trH8))
 sum <- trH1 + trH2 + trH3 + trH4 + trH5 + trH6 + trH7 + trH8
 trB <- trHI - sum
 trB/trHI
+sum
 
 #Evidenzio gli 8 cluster nel dendrogramma
 rect.hclust(hls, k = 8, border = "red")
@@ -931,11 +946,9 @@ rect.hclust(hls, k = 8, border = "red")
 #                           METODI NON GERARCHICI
 #________________________________________________________________________
 
-
 #________________________________________________________________________
 #                                   K-MEANS
 #________________________________________________________________________
-
 
 #Applico l'algoritmo k-means
 km <- kmeans (data[, -1], centers = 8 , iter.max = 20, nstart = 10)
