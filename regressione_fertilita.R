@@ -1,5 +1,10 @@
 #REGRESSIONE
 
+#________________________________________________________________________
+#                       OPERAZIONI PRELIMINARI
+#________________________________________________________________________
+
+
 library(readxl)
 library(ggplot2)
 
@@ -9,8 +14,45 @@ data <- read_excel("dataset_puliti/fertilita_arrotondato.xlsx")
 View(data)
 
 
-#___________________________________________________________________________
+#________________________________________________________________________
+#           REGRESSIONE LINEARE SINGOLA - 2021 con 2010
+#________________________________________________________________________
 
+
+#Calcolo la covarianza campionaria
+cov(data$`2010`, data$`2021`)
+
+#Calcolo il coefficiente di correlazione campionario
+cor(data$`2010`, data$`2021`)
+
+#Otteniamo lo scatterplot
+plot(data$`2010`, data$`2021`, main = "Retta di regressione",
+     xlab = "Fertilità nel 2010", ylab = "Fertilità nel 2021",
+     col = "red")
+abline(lm(data$`2021` ~ data$`2010`), col = "blue")
+
+
+#________________________________________________________________________
+#           REGRESSIONE LINEARE SINGOLA - 2021 con 2020
+#________________________________________________________________________
+
+
+#Calcolo la covarianza campionaria
+cov(data$`2020`, data$`2021`)
+
+#Calcolo il coefficiente di correlazione campionario
+cor(data$`2020`, data$`2021`)
+
+#Otteniamo lo scatterplot
+plot(data$`2020`, data$`2021`, main = "Retta di regressione",
+     xlab = "Fertilità nel 2020", ylab = "Fertilità nel 2021",
+     col = "red")
+abline(lm(data$`2021` ~ data$`2020`), col = "blue")
+
+
+#________________________________________________________________________
+#                     REGRESSIONE LINEARE MULTIPLA
+#________________________________________________________________________
 
 #Matrice delle covarianze
 cov(data[, -1])
