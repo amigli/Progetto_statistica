@@ -631,7 +631,8 @@ rect.hclust(hls, k = 8, border = "red")
 #________________________________________________________________________
 
 #Faccio il clustering sulla base della matrice delle distanze
-hls <- hclust(distanceMatrix, method = "centroid")
+d2 <- distanceMatrix^2
+hls <- hclust(d2, method = "centroid")
 hls$height
 str(hls)
 
@@ -789,7 +790,7 @@ rect.hclust(hls, k = 8, border = "red")
 #________________________________________________________________________
 
 #Faccio il clustering sulla base della matrice delle distanze
-hls <- hclust(distanceMatrix, method = "median")
+hls <- hclust(d2, method = "median")
 hls$height
 str(hls)
 
