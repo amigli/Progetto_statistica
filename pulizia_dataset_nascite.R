@@ -1,3 +1,6 @@
+#PULIZIA DATASET NASCITE
+#Author: Daniela Amendola
+
 #installo il pacchetto per leggere il file Excel che contiene il dataset
 install.packages("readxl")
 
