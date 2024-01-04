@@ -1,4 +1,5 @@
-#REGRESSIONE
+#REGRESSIONE SUL DATASET FERTILITA'
+#Author: Annalaura Miglino
 
 #________________________________________________________________________
 #                       OPERAZIONI PRELIMINARI
@@ -11,7 +12,7 @@ library(ggplot2)
 #Si legge il set di dati
 data <- read_excel("dataset_puliti/fertilita_arrotondato.xlsx")
 
-# Visualizzo il dataframe
+#Si visualizza il dataframe
 View(data)
 
 
