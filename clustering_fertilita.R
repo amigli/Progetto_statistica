@@ -1,4 +1,5 @@
-#CLUSTERING
+#CLUSTERING SUL DATASET FERTILITA'
+#Author: Annalaura Miglino
 
 #________________________________________________________________________
 #                       OPERAZIONI PRELIMINARI
@@ -54,6 +55,7 @@ WI <- cov(data[,-1])
 
 #Si memorizza il numero di righe
 n <- nrow(data[, -1])
+
 #Si calcola la matrice di non omogeneità statistica e viene stampata
 HI <- (n-1)*WI
 HI
@@ -75,8 +77,10 @@ trHI
 #Si effettua il clustering sulla base della matrice delle distanze
 #Il metodo scelto è quello del legame singolo
 hls <- hclust(distanceMatrix, method = "single")
+
 #Si estraggono le altezze di unione degli individui
 hls$height
+
 #Si visualizza la struttura dell'oggetto hls
 str(hls)
 
@@ -96,7 +100,7 @@ plot(c(0, hls$height), seq(49,1), type = "b", main = "Screeplot",
 #Si osservano le altezze a cui sono avvenute le varie agglomerazioni
 c(0, hls$height)
 
-#Si verifica anche con l'elbow point
+#Si verifica anche con l'elbow point il numero ideale di cluster
 #Viene calcolata la varianza cumulativa
 cumulative_variance <- cumsum(hls$height) / sum(hls$height)
 
@@ -119,6 +123,7 @@ cat("Numero consigliato di cluster:", elbow_point, "\n")
 #Si calcolano le misure di non omogeneità statistica tra i cluster
 #Si effettua il taglio del dendrogramma in modo che siano 2 gruppi
 taglio <- cutree (hls , k =2, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -155,6 +160,7 @@ rect.hclust(hls, k = 2, border = "red")
 #Si verifica con 5 cluster se le misure migliorano
 #Si effettua il taglio del dendrogramma in modo che siano 5 gruppi
 taglio <- cutree (hls , k =5, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -165,27 +171,27 @@ tagliolist <- list(taglio)
 #in base alle etichette dei cluster
 agvar <- aggregate(data[, -1], tagliolist, var)[, -1]
 
-##Si calcola la traccia del primo gruppo
+#Si calcola la traccia del primo gruppo
 trH1 <-(num [[1]] -1) * sum(agvar [1, ])
 if(is.na(trH1))
   trH1 <- 0
 
-##Si calcola la traccia del secondo gruppo
+#Si calcola la traccia del secondo gruppo
 trH2 <-(num [[2]] -1) *sum(agvar [2, ])
 if(is.na(trH2))
   trH2 <- 0
 
-##Si calcola la traccia del terzo gruppo
+#Si calcola la traccia del terzo gruppo
 trH3 <-(num [[3]] -1) *sum(agvar [3, ])
 if(is.na(trH3))
   trH3 <- 0
 
-##Si calcola la traccia del quarto gruppo
+#Si calcola la traccia del quarto gruppo
 trH4 <-(num [[4]] -1) *sum(agvar [4, ])
 if(is.na(trH4))
   trH4 <- 0
 
-##Si calcola la traccia del quinto gruppo
+#Si calcola la traccia del quinto gruppo
 trH5 <-(num [[5]] -1) *sum(agvar [5, ])
 if(is.na(trH5))
   trH5 <- 0
@@ -204,8 +210,9 @@ rect.hclust(hls, k = 5, border = "red")
 #________________________________________________________________________
 
 #Si verifica con 8 cluster se le misure migliorano
-#Si crea una lista contenente le etichette dei cluster
+#Si effettua il taglio del dendrogramma in modo che siano 8 gruppi
 taglio <- cutree (hls , k =8, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -221,7 +228,7 @@ trH1 <-(num [[1]] -1) * sum(agvar [1, ])
 if(is.na(trH1))
   trH1 <- 0
 
-##Si calcola la traccia del secondo gruppo
+#Si calcola la traccia del secondo gruppo
 trH2 <-(num [[2]] -1) *sum(agvar [2, ])
 if(is.na(trH2))
   trH2 <- 0
@@ -275,8 +282,10 @@ rect.hclust(hls, k = 8, border = "red")
 #Si effettua il clustering sulla base della matrice delle distanze
 #Il metodo scelto è quello del legame completo
 hls <- hclust(distanceMatrix, method = "complete")
+
 #Si estraggono le altezze di unione degli individui
 hls$height
+
 #Si visualizza la struttura dell'oggetto hls
 str(hls)
 
@@ -319,6 +328,7 @@ cat("Numero consigliato di cluster:", elbow_point, "\n")
 #Si calcolano le misure di non omogeneità statistica tra i cluster
 #Si effettua il taglio del dendrogramma in modo che siano 2 gruppi
 taglio <- cutree (hls , k =2, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -355,6 +365,7 @@ rect.hclust(hls, k = 2, border = "red")
 #Si verifica con 5 cluster se le misure migliorano
 #Si effettua il taglio del dendrogramma in modo che siano 5 gruppi
 taglio <- cutree (hls , k =5, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -404,8 +415,9 @@ rect.hclust(hls, k = 5, border = "red")
 #________________________________________________________________________
 
 #Si verifica con 8 cluster se le misure migliorano
-#Si effettua il taglio del dendrogramma in modo che siano 5 gruppi
+#Si effettua il taglio del dendrogramma in modo che siano 8 gruppi
 taglio <- cutree (hls , k =8, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -475,8 +487,10 @@ rect.hclust(hls, k = 8, border = "red")
 #Si effettua il clustering sulla base della matrice delle distanze
 #Il metodo scelto è quello del legame medio
 hls <- hclust(distanceMatrix, method = "average")
+
 #Si estraggono le altezze di unione degli individui
 hls$height
+
 #Si visualizza la struttura dell'oggetto hls
 str(hls)
 
@@ -519,6 +533,7 @@ cat("Numero consigliato di cluster:", elbow_point, "\n")
 #Si calcola la misura di non omogeneità statistica tra i cluster
 #Si effettua il taglio del dendrogramma in modo che siano 2 gruppi
 taglio <- cutree (hls , k =2, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -555,6 +570,7 @@ rect.hclust(hls, k = 2, border = "red")
 #Si verifica con 5 cluster se le misure migliorano
 #Si effettua il taglio del dendrogramma in modo che siano 5 gruppi
 taglio <- cutree (hls , k =5, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -604,8 +620,9 @@ rect.hclust(hls, k = 5, border = "red")
 #________________________________________________________________________
 
 #Si verifica con 8 cluster se le misure migliorano
-#Si effettua il taglio del dendrogramma in modo che siano 5 gruppi
+#Si effettua il taglio del dendrogramma in modo che siano 8 gruppi
 taglio <- cutree (hls , k =8, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -674,10 +691,13 @@ rect.hclust(hls, k = 8, border = "red")
 
 #Effettuo il clustering sulla base dei quadrati della matrice delle distanze
 d2 <- distanceMatrix^2
+
 #Il metodo scelto è quello del centroide
 hls <- hclust(d2, method = "centroid")
+
 #Si estraggono le altezze di unione degli individui
 hls$height
+
 #Si visualizza la struttura dell'oggetto hls
 str(hls)
 
@@ -691,6 +711,7 @@ axis(side = 4, at = round(c(0, hls$height), 2))
 #Si calcola la misura di non omogeneità statistica tra i cluster
 #Si effettua il taglio del dendrogramma in modo che siano 2 gruppi
 taglio <- cutree (hls , k =2, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -727,6 +748,7 @@ rect.hclust(hls, k = 2, border = "red")
 #Si verifica con 5 cluster se le misure migliorano
 #Si effettua il taglio del dendrogramma in modo che siano 5 gruppi
 taglio <- cutree (hls , k =5, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -776,8 +798,9 @@ rect.hclust(hls, k = 5, border = "red")
 #________________________________________________________________________
 
 #Si verifica con 8 cluster se le misure migliorano
-#Si effettua il taglio del dendrogramma in modo che siano 5 gruppi
+#Si effettua il taglio del dendrogramma in modo che siano 8 gruppi
 taglio <- cutree (hls , k =8, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -847,8 +870,10 @@ rect.hclust(hls, k = 8, border = "red")
 #Effettuo il clustering sulla base dei quadrati della matrice delle distanze
 #Il metodo scelto è quello della mediana
 hls <- hclust(d2, method = "median")
+
 #Si estraggono le altezze di unione degli individui
 hls$height
+
 #Si visualizza la struttura dell'oggetto hls
 str(hls)
 
@@ -862,6 +887,7 @@ axis(side = 4, at = round(c(0, hls$height), 2))
 #Si calcola la misura di non omogeneità statistica tra i cluster
 #Si effettua il taglio del dendrogramma in modo che siano 2 gruppi
 taglio <- cutree (hls , k =2, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -898,6 +924,7 @@ rect.hclust(hls, k = 2, border = "red")
 #Si verifica con 5 cluster se le misure migliorano
 #Si effettua il taglio del dendrogramma in modo che siano 5 gruppi
 taglio <- cutree (hls , k =5, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
@@ -947,8 +974,9 @@ rect.hclust(hls, k = 5, border = "red")
 #________________________________________________________________________
 
 #Si verifica con 8 cluster se le misure migliorano
-#Si effettua il taglio del dendrogramma in modo che siano 5 gruppi
+#Si effettua il taglio del dendrogramma in modo che siano 8 gruppi
 taglio <- cutree (hls , k =8, h = NULL)
+
 #Si osserva quanti individui ci sono in ciascun cluster
 num <- table (taglio)
 
