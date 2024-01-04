@@ -1,4 +1,5 @@
-#INFERENZA STATISTICA
+#INFERENZA STATISTICA DATASET FERTILITA'
+#Author: Annalaura Miglino
 
 #________________________________________________________________________
 #                       OPERAZIONI PRELIMINARI
@@ -6,10 +7,10 @@
 
 library(readxl)
 
-#Leggo il set di dati
+#Si legge il set di dati
 data <- read_excel("dataset_puliti/fertilita_arrotondato.xlsx")
 
-#Visualizzo i dati
+#Si visualizzano i dati
 View(data)
 
 
@@ -17,11 +18,10 @@ View(data)
 #                       ELIMINAZIONE PAESI E ANNI
 #________________________________________________________________________
 
-
-#Elimino tutti gli anni lasciando solo il 2021
+#Si eliminano tutti gli anni lasciando solo il 2021
 data <- data[, c("Country", "2021")]
 
-#Mantengo solo le righe per alcuni Paesi
+#Vengono mantenute solo le righe per alcuni Paesi
 data <- data[data$Country %in% c("Austria", "Belgium", "Czech Republic", 
                                "Denmark", "Estonia", "Finland", "France", 
                                "Germany", "Greece", "Hungary", "Ireland", 
@@ -30,7 +30,7 @@ data <- data[data$Country %in% c("Austria", "Belgium", "Czech Republic",
                                "Slovak Republic", "Slovenia", "Spain", 
                                "Sweden", "Bulgaria", "Croatia", "Romania"), ]
 
-#Trasformo i valori in un array
+#Si trasformano i valori in un array
 dataValues <- as.array(data$'2021')
 
 
@@ -38,30 +38,32 @@ dataValues <- as.array(data$'2021')
 #                       CRITERIO DEL CHI-QUADRATO
 #________________________________________________________________________
 
-
-#Lunghezza del campione
+#Si calcola la lunghezza del campione
 n <- length(dataValues)
 n
 
-#Media del campione
+#Si calcola la media del campione
 m <- mean(dataValues)
 m
 
-#Deviazione standard del campione
+#Si calcola la deviazione standard del campione
 d <- sd(dataValues)
 d
 
-#Uso i quantili della distribuzione normale per determinare i sottoinsiemi
+#Si usano i quantili della distribuzione normale per determinare i sottoinsiemi
 a <- numeric(4)
 for (i in 1:4)
   a[i] <- qnorm(0.2*i, mean = m, sd = d)
 
 a
 
-#Numero di elementi nei vari intervalli
+#Si pone uguale a 5 il numero di intervalli
 r <- 5
+
+#Inizializza un vettore numerico per memorizzare le frequenze degli intervalli
 nint <- numeric (r)
 
+#Vengono calcolate le frequenze degli intervalli
 nint[1] <- length(which(dataValues < a[1]))
 nint[2] <- length(which((dataValues >= a[1]) & (dataValues < a[2])))
 nint[3] <- length(which((dataValues >= a[2]) & (dataValues < a[3])))
@@ -70,23 +72,22 @@ nint[5] <- length(which(dataValues >= a[4]))
 
 nint
 
-#Calcolo X^2
+#Si calcola il valore del test chi-quadro
 chi2 <- sum(((nint-n*0.2)/sqrt(n*0.2))^2)
 chi2
 
-#Calcolo le due misure X^2 con aplha=0.05
+#Si specifica k e il livello di significatività alpha
 k <- 2
 alpha <- 0.05
 
+#Si calcolano i valore critici per il test chi-quadro
 qchisq(alpha/2, df = r-k-1)
-
 qchisq(1-alpha/2, df= r-k-1)
 
 
 #________________________________________________________________________
 #                             STIMA PUNTUALE
 #________________________________________________________________________
-
 
 #Stimatore valore medio mu
 mu <- mean(dataValues)
@@ -101,31 +102,30 @@ sigma2
 #                           STIMA INTERVALLARE
 #________________________________________________________________________
 
-
 #Caso 1: intervallo per media con varianza non nota
-#Cacolo la media del campione
+#Si calcola la media del campione
 mean(dataValues)
 
-#Calcolo la deviazione standard del campione
+#Si calcola la deviazione standard del campione
 sd(dataValues)
 
-#Imposto il valore di alpha
+#Si imposta il valore di alpha
 alpha <- 1-0.99
 
-#Calcolo gli intervalli
+#Si calcolano gli estremi dell'intervallo di confidenza
 mean(dataValues) - qt(1-alpha/2, df=n-1)*sd(dataValues)/sqrt(n)
 mean(dataValues) + qt(1-alpha/2, df=n-1)*sd(dataValues)/sqrt(n)
 
 #________________________________________________________________________
 
 #Caso 2: intervallo per varianza con media non nota
-#Calcolo la media del campione
+#Si calcola la media del campione
 mean(dataValues)
 
-#Calcolo la varianza del campione
+#Si calcola la varianza del campione
 var(dataValues)
 
-#Calcolo gli intervalli
+#Si calcolano gli estremi dell'intervallo di confidenza
 (n-1)*var(dataValues)/qchisq(1-alpha/2, df = n-1)
 (n-1)*var(dataValues)/qchisq(alpha/2, df = n-1)
 
@@ -134,18 +134,16 @@ var(dataValues)
 #                         CONFRONTO TRA POPOLAZIONI
 #________________________________________________________________________
 
+#Si verifica che sia normale anche la seconda popolazione (del 2010)
 
-#Verifico che sia normale anche la seconda popolazione (sul 2010)
-
-
-#Operazioni preliminari
-#Leggo di nuovo il set di dati perché prima è stato modificato
+#OPERAZIONI PRELIMINARI
+#Si legge di nuovo il set di dati perché prima è stato modificato
 data <- read_excel("dataset_puliti/fertilita_arrotondato.xlsx")
 
-#Elimino tutti gli anni lasciando solo il 2010
+#Si eliminano tutti gli anni lasciando solo il 2010
 data <- data[, c("Country", "2010")]
 
-#Mantengo solo le righe per alcuni Paesi
+#Si mantengono solo le righe per alcuni Paesi
 data <- data[data$Country %in% c("Austria", "Belgium", "Czech Republic", 
                                  "Denmark", "Estonia", "Finland", "France", 
                                  "Germany", "Greece", "Hungary", "Ireland", 
@@ -154,37 +152,38 @@ data <- data[data$Country %in% c("Austria", "Belgium", "Czech Republic",
                                  "Slovak Republic", "Slovenia", "Spain", 
                                  "Sweden", "Bulgaria", "Croatia", "Romania"), ]
 
-#Trasformo i valori in un array
+#Si trasformano i valori in un array
 dataValues2010 <- as.array(data$'2010')
-
 
 #________________________________________________________________________
 
-
-#Effettuo il test del chi-quadrato su questa popolazione
-#Lunghezza del campione
+#Si effettua il test del chi-quadrato su questa popolazione
+#Si calcola la lunghezza del campione
 n <- length(dataValues2010)
 n
 
-#Media del campione
+#Si calcola la media del campione
 m <- mean(dataValues2010)
 m
 
-#Deviazione standard del campione
+#Si calcola la deviazione standard del campione
 d <- sd(dataValues2010)
 d
 
-#Uso i quantili della distribuzione normale per determinare i sottoinsiemi
+#Si usano i quantili della distribuzione normale per determinare i sottoinsiemi
 a <- numeric(4)
 for (i in 1:4)
   a[i] <- qnorm(0.2*i, mean = m, sd = d)
 
 a
 
-#Numero di elementi nei vari intervalli
+#Si pone uguale a 5 il numero di intervalli
 r <- 5
+
+#Inizializza un vettore numerico per memorizzare le frequenze degli intervalli
 nint <- numeric (r)
 
+#Vengono calcolate le frequenze degli intervalli
 nint[1] <- length(which(dataValues2010 < a[1]))
 nint[2] <- length(which((dataValues2010 >= a[1]) & (dataValues2010 < a[2])))
 nint[3] <- length(which((dataValues2010 >= a[2]) & (dataValues2010 < a[3])))
@@ -193,40 +192,42 @@ nint[5] <- length(which(dataValues2010 >= a[4]))
 
 nint
 
-#Calcolo X^2
+#Si calcola il valore del test chi-quadro
 chi2 <- sum(((nint-n*0.2)/sqrt(n*0.2))^2)
 chi2
 
-#Calcolo le due misure X^2 con aplha=0.05
+#Si specifica k e il livello di significatività alpha
 k <- 2
 alpha <- 0.05
 
+#Si calcolano i valore critici per il test chi-quadro
 qchisq(alpha/2, df = r-k-1)
-
 qchisq(1-alpha/2, df= r-k-1)
-
 
 #________________________________________________________________________
 
+#CONFRONTO TRA LE DUE POPOLAZIONI
 
-#Confronto le due popolazioni
+#Si imposta il valore di alpha
 alpha <- 1-0.99
 
+#Si calcola il quantile superiore della distribuzione normale standard
+#corrispondente al livello di confidenza specificato
 qnorm(1-alpha/2, mean = 0, sd = 1)
 
 #La dimensione dei due campioni è uguale
 n <- 25
 
-#Salvo le due medie
+#Si salvano le due medie
 m1 <- mean(dataValues)
 m2 <- mean(dataValues2010)
 
-#Salvo le deviazioni standard
+#Si salvano le deviazioni standard
 s1 <- sqrt(var(dataValues))
 s2 <- sqrt(var(dataValues2010))
 
+#Si calcolano gli estremi dell'intervallo di confidenza
 m1 - m2 - qnorm(1-alpha/2, mean = 0, sd = 1) * sqrt(s1^2/n + s2^2/n)
-
 m1 - m2 + qnorm(1-alpha/2, mean = 0, sd = 1) * sqrt(s1^2/n + s2^2/n)
 
 
@@ -234,22 +235,22 @@ m1 - m2 + qnorm(1-alpha/2, mean = 0, sd = 1) * sqrt(s1^2/n + s2^2/n)
 #                         VERIFICA DELLE IPOTESI
 #________________________________________________________________________
 
-
+#Si impostano i valori di alpha, mu0 ed n
 alpha <- 0.01
 mu0 <- 1.5
 n <- 25
 
+#Si calcola il valore critico inferiore della distribuzione
 qt(alpha, df = n-1)
 
-#La media ce l'ho con m1, la deviazione standard con s1
-
+#Si calcola la statistica di test standardizzata
 (m1 - mu0)/(s1 / sqrt(n))
 
-#Calcolo il p-value
+#Si calcola il p-value
 pvalue <- pt(1.487066, df = n-1)
 pvalue
 
-#Grafico
+#Viene creato il grafico
 curve(dt(x, df = 5), from = -3, to = 3, axes = FALSE,
       ylim = c(0, 0.5), xlab = "", ylab = "", 
       main = "Densità di Student con 24 gradi di libertà")
