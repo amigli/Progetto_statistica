@@ -1,3 +1,6 @@
+# CLUSTERING SUL DATASET DELLE NASCITE
+# Author: Daniela Amendola
+
 library(readxl)
 library(openxlsx)
 
@@ -5,34 +8,35 @@ data <- read_excel("dataset_puliti/nascite_arrotondato.xlsx")
 
 View(data)
 
-# Salvo il nome dei Paesi
+# Si estraggono dal datafram i nomi dei Paesi
 nome_paesi <- data$Country
 nome_paesi <- sub(" \\(People's Republic of\\)", "", data$Country) # Modifico il nome della Cina
 
-# Imposto l'opzione per evitare la notazione scientifica nei grafici
+# Si imposta l'opzione per evitare la notazione scientifica nei grafici
 options(scipen = 999)
 
 ################################################################################
-#------------------- Matrice delle distanze -----------------------------------#
+#------------------------- Matrice delle distanze -----------------------------#
 ################################################################################
 
+# Si calcola la matrice delle distanze tramite la metrica euclidea
 distanzaEuclidea <- dist(data[, -1], method = "euclidean")
 distanzaEuclidea
 
-# Converto la matrice delle distanze in un dataframe
+# Si converte la matrice delle distanze in un dataframe
 distanzaEuclidea_df <- as.data.frame(as.matrix(distanzaEuclidea))
 
-# Aggiungo i nomi delle righe e delle colonne
+# Si aggiungono i nomi dei Paesi alle righe e alle colonne
 rownames(distanzaEuclidea_df) <- nome_paesi
 colnames(distanzaEuclidea_df) <- nome_paesi
 
 View(distanzaEuclidea_df)
 
-# Salvo la matrice delle distanze euclidee in un file excel
+# Si salva la matrice delle distanze euclidee in un file Excel
 write.xlsx(distanzaEuclidea_df, "matrice_distanze_nascite.xlsx", rowNames = TRUE)
 
 ################################################################################
-#------------------- Misura di non omogeneità totale --------------------------#
+#----------------------- Misura di non omogeneità totale ----------------------#
 ################################################################################
 
 n <- nrow(data[, -1]) # numero di righe nel df
@@ -43,13 +47,13 @@ trHI <- sum(diag(HI)) # misura di non omogeneita’ statistica
 trHI
 
 ################################################################################
-# ------------------- Metodi gerarchici ---------------------------------------#
+# ---------------------------- Metodi gerarchici ------------------------------#
 ################################################################################
 
-# ------------ Metodo del legame singolo ------------ #
+#------------ Metodo del legame singolo ------------#
 hls_singolo <- hclust(distanzaEuclidea, method = "single")
 
-# Costruisco lo screeplot
+# Si realizza lo screeplot per vedere il numero di cluster consigliato
 plot(c(0, hls_singolo$height), 
      seq(48,1),
      type = "b", 
@@ -61,8 +65,8 @@ plot(c(0, hls_singolo$height),
 
 c(0, hls_singolo$height) # Consigliato 3 cluster
 
-# -----Misure di non omogeneità statistiche
-# Taglio il dendrogramma in 3 cluster
+#----- Misure di non omogeneità statistiche
+# Si taglia il dendrogramma in 3 cluster
 taglio_singolo <- cutree(hls_singolo, k = 3, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -91,15 +95,15 @@ if(is.na(trH3))
   trH3 <- 0
 trH3
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 + trH3 
 trWithin
 
-# Calcolo la misura di non omogeneita’ tra i cluster (between)
+# Si calcola la misura di non omogeneita’ tra i cluster (between)
 trBetween <- trHI - trWithin
 trBetween/trHI # 0.9659548
 
-#-------- Provo 5 cluster
+#-------- Si Prova con 5 cluster
 taglio_singolo <- cutree(hls_singolo, k = 5, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -140,15 +144,15 @@ if(is.na(trH5))
   trH5 <- 0
 trH5
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 + trH3 + trH4 + trH5 
 trWithin
 
-# Calcolo la misura di non omogeneita’ tra i cluster (between)
+# Si calcola la misura di non omogeneita’ tra i cluster (between)
 trBetween <- trHI - trWithin 
 trBetween/trHI # 0.9882972
 
-# ------- Provo 10 cluster
+# ------- Si Prova con 10 cluster
 taglio_singolo <- cutree(hls_singolo, k = 10, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -219,16 +223,16 @@ if(is.na(trH10))
   trH10 <- 0
 trH10
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 + trH3 + trH4 + trH5 + trH6 + trH7 + trH8 + trH9 + trH10 
 trWithin
 
-# Calculo la misura di non omogeneita’ tra i cluster (between)
+# Si calcola la misura di non omogeneita’ tra i cluster (between)
 trBetween <- trHI - trWithin
 trBetween/trHI # 0.997217
 
 #---------Dendrogramma
-# Visualizzo il dendrogramma con 10 cluster
+# Si visualizza il dendrogramma con 10 cluster
 plot(hls_singolo, 
      hang = -1,
      main = "Dendrogramma del metodo del legame singolo", 
@@ -237,14 +241,14 @@ plot(hls_singolo,
      labels = nome_paesi)
 axis(side = 4, at = round(hls_singolo$height, 2))
 
-# Inserisco i rettangoli per i cluster
+# Si inseriscono i rettangoli per i cluster
 rect.hclust(hls_singolo, k = 10, border = "red")
 
 
-# ------------ Metodo del legame completo ------------ #
+#------------ Metodo del legame completo ------------#
 hlc_completo <- hclust(distanzaEuclidea, method = "complete")
 
-# Costruisco lo screeplot
+# Si realizza lo screeplot per vedere il numero di cluster consigliato
 plot(c(0, hlc_completo$height), 
      seq(48,1),
      type = "b", 
@@ -256,8 +260,8 @@ plot(c(0, hlc_completo$height),
 
 c(0, hlc_completo$height) # Consigliato 2 cluster
 
-# -----Misure di non omogeneità statistiche
-# Taglio il dendrogramma in 2 cluster
+#----- Misure di non omogeneità statistiche
+# Si taglia il dendrogramma in 2 cluster
 taglio_completo <- cutree(hlc_completo, k = 2, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -280,7 +284,7 @@ if(is.na(trH2))
   trH2 <- 0
 trH2
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2
 trWithin
 
@@ -288,8 +292,8 @@ trWithin
 trBetween <- trHI - trWithin 
 trBetween/trHI # 0.9651982
 
-#-------- Provo 5 cluster
-# Taglio il dendrogramma in 5 cluster
+#-------- Si Prova con 5 cluster
+# Si taglia il dendrogramma in 5 cluster
 taglio_completo <- cutree(hlc_completo, k = 5, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -330,16 +334,16 @@ if(is.na(trH5))
   trH5 <- 0
 trH5
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 + trH3 + trH4 + trH5 
 trWithin
 
-# Calcolo la misura di non omogeneità tra i cluster (between)
+# Si calcola la misura di non omogeneità tra i cluster (between)
 trBetween <- trHI - trWithin
 trBetween/trHI # 0.9968508
 
-#-------- Provo 10 cluster
-# Taglio il dendrogramma in 10 cluster
+#-------- Si Prova con 10 cluster
+# Si taglia il dendrogramma in 10 cluster
 taglio_completo <- cutree(hlc_completo, k = 10, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -410,16 +414,16 @@ if(is.na(trH10))
   trH10 <- 0
 trH10
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 + trH3 + trH4 + trH5 + trH6 + trH7 + trH8 + trH9 + trH10
 trWithin
 
-# Calcolo la misura di non omogeneità tra i cluster (between)
+# Si calcola la misura di non omogeneità tra i cluster (between)
 trBetween <- trHI - trWithin
 trBetween/trHI # 0.9996666
 
 #-------- Dendrogramma
-# Visualizzo il dendrogramma con 10 cluster
+# Si visualizza il dendrogramma con 10 cluster
 plot(hlc_completo, 
      hang = -1,
      main = "Dendrogramma del metodo del legame completo", 
@@ -428,13 +432,13 @@ plot(hlc_completo,
      labels = nome_paesi)
 axis(side = 4, at = round(hlc_completo$height, 2))
 
-# Inserisco i rettangoli per i cluster
+# Si inseriscono i rettangoli per i cluster
 rect.hclust(hlc_completo, k = 10, border = "red")
 
-# ------------ Metodo del legame medio ------------ #
+#------------ Metodo del legame medio ------------#
 hlm_medio <- hclust(distanzaEuclidea, method = "average")
 
-# Costruisco lo screeplot
+# Si realizza lo screeplot per vedere il numero di cluster consigliato
 plot(c(0, hlm_medio$height), 
      seq(48,1),
      type = "b", 
@@ -446,8 +450,8 @@ plot(c(0, hlm_medio$height),
 
 c(0, hlm_medio$height) # Consigliato 2 cluster
 
-# -----Misure di non omogeneità statistiche
-# Taglio il dendrogramma in 2 cluster
+#----- Misure di non omogeneità statistiche
+# Si taglia il dendrogramma in 2 cluster
 taglio_medio <- cutree(hlm_medio, k = 2, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -470,16 +474,16 @@ if(is.na(trH2))
   trH2 <- 0
 trH2
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 
 trWithin
 
-# Calcolo la misura di non omogeneità tra i cluster (between)
+# Si calcola la misura di non omogeneità tra i cluster (between)
 trBetween <- trHI - trWithin
 trBetween/trHI # 0.9651982
 
-#-------- Provo 5 cluster
-# Taglio il dendrogramma in 5 cluster
+#-------- Si Prova con 5 cluster
+# Si taglia il dendrogramma in 5 cluster
 taglio_medio <- cutree(hlm_medio, k = 5, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -520,16 +524,16 @@ if(is.na(trH5))
   trH5 <- 0
 trH5
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 + trH3 + trH4 + trH5 
 trWithin
 
-# Calcolo la misura di non omogeneità tra i cluster (between)
+# Si calcola la misura di non omogeneità tra i cluster (between)
 trBetween <- trHI - trWithin
 trBetween/trHI # 0.9944106
 
-#-------- Provo 10 cluster
-# Taglio il dendrogramma in 10 cluster
+#-------- Si Prova con 10 cluster
+# Si taglia il dendrogramma in 10 cluster
 taglio_medio <- cutree(hlm_medio, k = 10, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -600,16 +604,16 @@ if(is.na(trH10))
   trH10 <- 0
 trH10
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 + trH3 + trH4 + trH5 + trH6 + trH7 + trH8 + trH9 + trH10 
 trWithin
 
-# Calcolo la misura di non omogeneità tra i cluster (between)
+# Si calcola la misura di non omogeneità tra i cluster (between)
 trBetween <- trHI - trWithin
 trBetween/trHI # 0.9996666
 
 #---------Dendrogramma
-# Visualizzo il dendrogramma con 10 cluster
+# Si visualizza il dendrogramma con 10 cluster
 plot(hlm_medio,
      hang = -1,
      main = "Dendrogramma del metodo del legame medio", 
@@ -618,17 +622,17 @@ plot(hlm_medio,
      labels = nome_paesi)
 axis(side = 4, at = round(hlm_medio$height, 2))
 
-# Inserisco i rettangoli per i cluster
+# Si inseriscono i rettangoli per i cluster
 rect.hclust(hlm_medio, k = 10, border = "red")
 
-# ------------ Metodo del centroide ------------ #
-# Calcolo la matrice contenente i quadrati delle distanze euclidee
+#------------ Metodo del centroide ------------#
+# Si calcola la matrice contenente i quadrati delle distanze euclidee
 distanzaEuclidea2 <- distanzaEuclidea ^ 2
 
 hc_centroide <- hclust(distanzaEuclidea2, method = "centroid")
 
-# -----Misure di non omogeneità statistiche
-# Taglio il dendrogramma in 2 cluster
+#----- Misure di non omogeneità statistiche
+# Si taglia il dendrogramma in 2 cluster
 taglio_centroide <- cutree(hc_centroide, k = 2, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -651,16 +655,16 @@ if(is.na(trH2))
   trH2 <- 0
 trH2
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 
 trWithin
 
-# Calcolo la misura di non omogeneità tra i cluster (between)
+# Si calcola la misura di non omogeneità tra i cluster (between)
 trBetween <- trHI - trWithin
 trBetween/trHI # 0.9651982
 
-#-------- Provo 5 cluster
-# Taglio il dendrogramma in 5 cluster
+#-------- Si Prova con 5 cluster
+# Si taglia il dendrogramma in 5 cluster
 taglio_centroide <- cutree(hc_centroide, k = 5, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -701,16 +705,16 @@ if(is.na(trH5))
   trH5 <- 0
 trH5
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 + trH3 + trH4 + trH5 
 trWithin
 
-# Calcolo la misura di non omogeneità tra i cluster (between)
+# Si calcola la misura di non omogeneità tra i cluster (between)
 trBetween <- trHI - trWithin
 trBetween/trHI # 0.9944106
 
-#--------- Provo 10 cluster
-# Taglio il dendrogramma in 10 cluster
+#--------- Si Prova con 10 cluster
+# Si taglia il dendrogramma in 10 cluster
 taglio_centroide <- cutree(hc_centroide, k = 10, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -781,16 +785,16 @@ if(is.na(trH10))
   trH10 <- 0
 trH10
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 + trH3 + trH4 + trH5 + trH6 + trH7 + trH8 + trH9 + trH10 
 trWithin
 
-# Calcolo la misura di non omogeneità tra i cluster (between)
+# Si calcola la misura di non omogeneità tra i cluster (between)
 trBetween <- trHI - trWithin
 trBetween/trHI # 0.9996666
 
 #---------Dendrogramma
-# Visualizzo il dendrogramma con 10 cluster
+# Si visualizza il dendrogramma con 10 cluster
 plot(hc_centroide,
      hang = -1,
      main = "Dendrogramma del metodo del centroide", 
@@ -799,14 +803,14 @@ plot(hc_centroide,
      labels = nome_paesi)
 axis(side = 4, at = round(hc_centroide$height, 2))
 
-# Inserisco i rettangoli per i cluster
+# Si inseriscono i rettangoli per i cluster
 rect.hclust(hc_centroide, k = 10, border = "red")
 
-# ------------ Metodo della mediana ------------ #
+#------------ Metodo della mediana ------------#
 hmed_mediana <- hclust(distanzaEuclidea2, method = "median")
 
-# -----Misure di non omogeneità statistiche
-# Taglio il dendrogramma in 2 cluster
+#----- Misure di non omogeneità statistiche
+# Si taglia il dendrogramma in 2 cluster
 taglio_mediana <- cutree(hmed_mediana, k = 2, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -829,16 +833,16 @@ if(is.na(trH2))
   trH2 <- 0
 trH2
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 
 trWithin
 
-# Calcolo la misura di non omogeneità tra i cluster (between)
+# Si calcola la misura di non omogeneità tra i cluster (between)
 trBetween <- trHI - trWithin
 trBetween/trHI # 0.9651982
 
-#--------- Provo 5 cluster
-# Taglio il dendrogramma in 5 cluster
+#--------- Si Prova con 5 cluster
+# Si taglia il dendrogramma in 5 cluster
 taglio_mediana <- cutree(hmed_mediana, k = 5, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -879,16 +883,16 @@ if(is.na(trH5))
   trH5 <- 0
 trH5
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 + trH3 + trH4 + trH5 
 trWithin
 
-# Calcolo la misura di non omogeneità tra i cluster (between)
+# Si calcola la misura di non omogeneità tra i cluster (between)
 trBetween <- trHI - trWithin
 trBetween/trHI # 0.9944106
 
-#--------- Provo 10 cluster
-# Taglio il dendrogramma in 10 cluster
+#--------- Si Prova con 10 cluster
+# Si taglia il dendrogramma in 10 cluster
 taglio_mediana <- cutree(hmed_mediana, k = 10, h = NULL)
 
 # Numeri di elementi dei gruppi
@@ -959,16 +963,16 @@ if(is.na(trH10))
   trH10 <- 0
 trH10
 
-# Calcolo la misura di non omogeneità interna (within)
+# Si calcola la misura di non omogeneità interna (within)
 trWithin <- trH1 + trH2 + trH3 + trH4 + trH5 + trH6 + trH7 + trH8 + trH9 + trH10 
 trWithin
 
-# Calcolo la misura di non omogeneità esterna (between)
+# Si calcola la misura di non omogeneità esterna (between)
 trBetween <- trHI - trWithin
 trBetween/trHI # 0.9992951
 
 #-------- Dendrogramma
-# Visualizzo il dendrogramma con 10 cluster
+# Si visualizza il dendrogramma con 10 cluster
 plot(hmed_mediana, 
      hang = -1,
      main = "Dendrogramma del metodo della mediana", 
@@ -977,33 +981,32 @@ plot(hmed_mediana,
      labels = nome_paesi)
 axis(side = 4, at = round(hmed_mediana$height, 2))
 
-# Inserisco i rettangoli per i cluster
+# Si inseriscono i rettangoli per i cluster
 rect.hclust(hmed_mediana, k = 10, border = "red")
 
 
-
 ################################################################################
-# ------------------- Metodi non gerarchici -----------------------------------#
+# -------------------------- Metodi non gerarchici ----------------------------#
 ################################################################################
 
-# ------------ k-means ------------ #
-# Visti i risultati precedenti scelgo di calcolare il k-means con 10 cluster
+# ------------ k-means ------------#
+# Visti i risultati precedenti si sceglie di calcolare il k-means con 10 cluster
 km <- kmeans(data[, -1], centers = 10, iter.max = 15, nstart = 10)
 km
 
-# Creo un dataframe associando il numero del cluster al nome del paese
+# Si crea un dataframe associando il numero del cluster al nome del paese
 associazioni <- data.frame(Numero = km$cluster, Paese = nome_paesi)
 
-# Visualizzo il dataframe
+# Si visualizza il dataframe
 View(associazioni)
 
-# Calcolo la misura di non omogeneità totale
+# Si calcola la misura di non omogeneità totale
 km$totss # 9594970616
 
-# Calcolo la misura di non omoegeneità interna (within)
+# Si calcola la misura di non omoegeneità interna (within)
 km$tot.withinss # 10951176
 
-# Calcolo la misura di non omogeneità esterna (between)
+# Si calcola la misura di non omogeneità esterna (between)
 km$betweenss/km$totss # 0.9988587
 
 

@@ -1,56 +1,59 @@
-#PULIZIA DATASET NASCITE
-#Author: Daniela Amendola
+# PULIZIA DATASET NASCITE
+# Author: Daniela Amendola
 
-#installo il pacchetto per leggere il file Excel che contiene il dataset
+# Si installa il pacchetto per la lettura del file Excel contenente il dataset
 install.packages("readxl")
 
-#importo la libreria per leggere il file Excel che contiene il dataset
+# Si importa la libreria per la lettura del file Excel contenente il dataset
 library(readxl)
 
-#aggiorno il pacchetto in modo che non dia problemi di incompatibilità
+# Si aggiorna il pacchetto per evitare problemi di incompatibilità
 update.packages("readxl")
 
-#leggo il file Excel e lo salvo nella variabile data
+# Si legge il file Excel e si salva nella variabile "data"
 data <- read_excel("dataset/nascite.xlsx")
 
-#visualizzo il dataset
+# Si visualizza il dataset
 View(data)
 
-#rinomino le colonne in modo da poterle manipolare più facilmente
+#------------------------- Pulizia ---------------------------#
+
+# Si rinominano le colonne per una manipolazione più agevole
 colnames(data) <- c("Col1", "Col2", "Col3", "Col4", "Col5", "Col6", "Col7", "Col8", "Col9", "Col10", "Col11", "Col12", "Col13", "Col14", "Col15", "Col16")  
 
-#elimino le prime due righe che sono di intestazione
+# Si eliminano le prime due righe di intestazione
 data <- tail(data, -2)
 
-#le ultime 49 righe contengono il rate di nascite ogni 1000 abitanti
-#essendo che per questa analisi non servono questi dati, vengono eliminati
+# Le ultime 49 righe contengono il tasso di nascite ogni 1000 abitanti e non sono necessarie per l'analisi
 data <- data[1:(nrow(data) - 49), ]
 
-#elimino la prima colonna, in quanto costituita solo dall'intestazione
+# Si elimina la prima colonna costituita solo dall'intestazione
 data <- data[ , -1]
 
-#elimino la seconda riga, in quanto costituita solo dall'intestazione "Country"
+# Si elimina la seconda riga costituita solo dall'intestazione "Country"
 data <- data[-2, ]
 
-#elimino la terza colonna, perché contiene solo valori nulli
+# Si elimina la terza colonna contenente solo valori nulli
 data <- data[,-3]
 
-# imposto il valore nella 40esima riga e 1a colonna a NA perché contiene l'intestazione dei paesi nella colonna successiva 
+# Si imposta il valore nella 40esima riga e 1a colonna a NA perché contiene l'intestazione dei paesi nella colonna successiva 
 data[40, 1] <- NA
 
-#sposto i valori dalla seconda colonna alla prima laddove ci siano valori NA
+# Si spostano i valori dalla seconda colonna alla prima laddove ci siano valori NA
 data$Col2 <- ifelse(is.na(data$Col2), data$Col3, data$Col2)
 
-#elimino la seconda colonna in quanto non è più necessaria
+# Si elimina la seconda colonna che non è più necessaria
 data <- data[, -2]
 
-#rinomino le colonne nel modo opportuno 
+# Si rinominano le colonne nel modo opportuno 
 colnames(data) <- c("Country", "2010", "2011", "2012", "2013", "2014", "2015", "2016", "2017", "2018", "2019", "2020", "2021")  
 
-#a questo punto, posso anche eliminare la prima riga che contiene gli anni, dato che sono stati impostati come nomi delle colonne
+# A questo punto, si può eliminare anche la prima riga che contiene gli anni, dato che sono stati impostati come nomi delle colonne
 data <- data[-1, ]
 
-# inserisco i dati mancanti
+#---------------------- Inserimento dati mancanti ------------------------#
+
+# Si inseriscono i dati mancanti
 data[1, "2021"] <- "298.5" # Australia
 data[4, "2021"] <- "373.7" # Canada
 data[5, "2021"] <- "229.1" # Chile
@@ -59,6 +62,7 @@ data[21, "2021"] <- "289" # Korea
 data[25, "2021"] <- "1880" # Mexico
 data[37, "2021"] <- "677.2" # United Kingdom
 
+# Altri dati mancanti per singoli paesi...
 # Argentina
 data[39, "2010"] <- "734.5"
 data[39, "2011"] <- "739.3"
@@ -103,33 +107,38 @@ data[47, "2021"] <- "1400"
 # South Africa
 data[48, "2021"] <- "1180"
 
-#stampo il dataframe per verificare che tutto sia stato modificato correttamente
+#---------------------- Salvataggio dataset pulito ------------------------#
+
+# Si stampa il dataframe per verificare le modifiche
 View(data)
 
-#installo il pacchetto per salvare l'excel pulito
+# Si installa il pacchetto per salvare l'excel pulito
 install.packages("writexl")
 
-#carico il pacchetto
+# Si carica il pacchetto
 library(writexl)
 
-#aggiorno il pacchetto in modo che non dia problemi di incompatibilità
+# Si aggiorna il pacchetto per evitare problemi di incompatibilità
 update.packages("writexl")
 
-#salvo il file Excel
+# Si salva il file Excel
 write_xlsx(data, "dataset_puliti/nascite_pulito.xlsx")
 
-# Essendo i dati in formato character, li converto in numeric
-# Seleziono le colonne da convertire (escludendo la prima con i nomi dei paesi)
+#---------------------- Conversione dati e salvataggio ------------------------#
+
+# Essendo i dati in formato character, si convertono in numeric
+# Si selezionano le colonne da convertire (escludendo la prima con i nomi dei paesi)
 columns_to_convert <- names(data)[-1]
 
-# Converto le colonne selezionate in formato numerico
+# Si convertono le colonne selezionate in formato numerico
 data[columns_to_convert] <- lapply(data[columns_to_convert], function(x) as.numeric(as.character(x)))
 
-# Arrotondo le colonne convertite alla seconda cifra decimale
+# Si arrotondano le colonne convertite alla seconda cifra decimale
 data[columns_to_convert] <- round(data[columns_to_convert], 2)
 
-# Visualizzo il dataset
+# Si visualizza il dataset
 View(data)
 
-# Salvo il file excel con i dati convertiti
+# Si salva il file Excel con i dati convertiti
 write_xlsx(data, "dataset_puliti/nascite_arrotondato.xlsx")
+
