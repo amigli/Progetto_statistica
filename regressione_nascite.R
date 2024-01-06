@@ -1,76 +1,86 @@
+# REGRESSIONE LINEARE SINGOLA E MULTIVARIATA SUL DATASET DELLE NASCITE
+# Author: Daniela Amendola
+
 library(readxl)
 
 data <- read_excel("dataset_puliti/nascite_arrotondato.xlsx")
 
-# Visualizzo il dataframe
+# Si visualizza il dataframe
 View(data)
 
-# Rimuovo la prima colonna (dove sono presenti i Paesi)
+# Si rimuove la prima colonna (dove sono presenti i Paesi)
 dati_senza_intestazioni <- data[, -1]
 
-# Converto i dati in un formato numerico
+# Si convertono i dati in un formato numerico
 dati_tot <- as.numeric(as.character(unlist(dati_senza_intestazioni)))
 
+################################################################################
+#---------------------- Regressione lineare singola  --------------------------#
+################################################################################
 
-#####################################################################
-# Calcolo la matrice delle covarianze campionarie
-cov(data[, -1]) #(?)
+# Si calcola la matrice delle covarianze campionarie
+cov(data$'2010', data$'2021')
 
-# Calcolo la matrice delle correlazioni campionarie
-cor(data[, -1]) #(?)
+# Si calcola la matrice delle correlazioni campionarie
+cor(data$'2010', data$'2021') 
 
-# Variabile dipendente 2021, 
-# variabili indipendenti 2010-2011-2012-2013-2014-2015-2016-2017-2018-2019-2020 #
+# Grafico
+plot(data$'2010', data$'2021', 
+     xlab = "Nascite nel 2010", 
+     ylab = "Nascite nel 2021", 
+     main = "Nascite nel 2010 vs Nascite nel 2021",
+     col = "red",
+     cex.lab = 0.8, 
+     cex.axis = 0.8)
+abline(lm(data$'2021' ~ data$'2010'), col = "blue")
 
-# Creo il modello di regressione lineare multivariata
-model <- lm(data$`2021` ~ data$`2010` + data$`2011` + data$`2012` + data$`2013` + data$`2014` + 
-            data$`2015` + data$`2016` + data$`2017` + data$`2018` + data$`2019` + data$`2020`, 
-            data = data)
+################################################################################
+#----------------------- Regressione lineare multivariata ---------------------#
+################################################################################
 
-# Visualizzo il modello
+# Si calcola la matrice delle covarianze campionarie
+cov(data[, -1])
+
+# Si calcola la matrice delle correlazioni campionarie
+cor(data[, -1]) 
+
+#--------------------------------------------------------------------------------#
+# Variabile dipendente: 2021                                                     # 
+# Variabili indipendenti: 2010-2011-2012-2013-2014-2015-2016-2017-2018-2019-2020 #
+#--------------------------------------------------------------------------------#
+
+# Si crea il modello di regressione lineare multivariata
+model <- lm(data$`2021` ~ data$`2010` + data$`2011` + data$`2012` + data$`2013` + 
+            data$`2014` + data$`2015` + data$`2016` + data$`2017` + data$`2018` + 
+            data$`2019` + data$`2020`, data = data)
+
+# Si visualizza il modello
 summary(model)
 
-# Ottengo i valori predetti dal modello
-valori_predetti <- fitted(model)
+#-------- Coefficiente di determinazione --------#
+coeff_det <- summary(model)$r.squared
+coeff_det
 
-# Creo un nuovo dataframe uguale a quello iniziale ma con i valori predetti nel 2021
-new_data <- data
-new_data$`2021` <- valori_predetti
+#-------- Valori stimati --------#
+valori_stimati <- fitted(model)
+valori_stimati
 
-# Arrotondo i valori predetti alla prima circa decimale
-new_data$`2021` <- round(new_data$`2021`, digits = 1)
-
-# Visualizzo il nuovo dataframe
-View(new_data)
-
-# Ottengo i residui del modello
+#-------- Residui--------#
 residui <- resid(model)
 residui
 
-#####################################################################
-# Confronto i valori predetti con quelli reali
-# Creo un dataframe con i valori predetti e quelli reali
-confronto <- data.frame(data$Country, data$`2021`, new_data$`2021`)
+# Si calcola il vettore dei residui standardizzati
+residui_standardizzati <- residui/sd(residui)
+residui_standardizzati
 
-# Rinomino le colonne
-colnames(confronto) <- c("Country", "Valori reali", "Valori predetti")
-
-# Visualizzo il dataframe
-View(confronto)
-
-# Calcolo la percentuale di errore
-errore <- (abs(confronto$`Valori reali` - confronto$`Valori predetti`)/confronto$`Valori reali`)*100
-
-# Facendo la media degli errori ottenuti, ottengo la percentuale di errore media
-mean(errore)
-
-# Verifico se i valori predetti sono maggiori, minori o uguali a quelli reali
-confronto$Comparison <- ifelse(confronto$`Valori predetti` > confronto$`Valori reali`, "Maggiore",
-                        ifelse(confronto$`Valori predetti`< confronto$`Valori reali`, "Minore", "Uguale"))
-
-# Conto i casi per ogni categoria
-table(confronto$Comparison)
-
-
-
-
+#-------- Grafico dei residui --------#
+# Si crea il grafico dei residui standardizzati in funzione dei valori stimati
+plot(valori_stimati, residui_standardizzati, 
+     xlab = "Valori stimati", 
+     ylab = "Residui standardizzati", 
+     main = "Grafico dei residui standardizzati \nin funzione dei valori stimati",
+     col = "red",
+     pch = 5,
+     cex.lab = 1, 
+     cex.axis = 1)
+abline(h = 0, col = "blue", lty = 2)
