@@ -1,24 +1,27 @@
+# INFERENZA STATISTICA SUL DATASET DELLE NASCITE
+# Author: Daniela Amendola
+
 library(readxl)
 
 data <- read_excel("dataset_puliti/nascite_arrotondato.xlsx")
 
-# Elimino le colonne che non mi servono per l'analisi,
-# lascio solo la colonna del 2021 e quella dei Paesi
+# Si eliminano le colonne che non servono per l'analisi,
+# si lasciano solo la colonna del 2021 e quella dei Paesi
 data <- data[, c("Country", "2021")]
 
-# Seleziono i paesi che hanno un valore nel 2021 inferiore a 100
+# Si selezionano i paesi che hanno un valore nel 2021 inferiore a 100 (mila)
 data <- data[(data$`2021` < 100), ]
 
 View(data)
 
-# Trasformo la colonna del 2021 in un array
+# Si converte la colonna del 2021 in un array
 data_array <- as.array(data$`2021`)
 data_array
 
 ################################################################################
-#------------------- Criterio del Chi-Quadrato --------------------------------#
+#------------------------- Criterio del Chi-Quadrato --------------------------#
 ################################################################################
-#---------- Verifico se è una distribuzione normale
+#---------- Si verifica se è una distribuzione normale
 
 n <- length(data_array) # Numero di elementi
 n
@@ -29,7 +32,7 @@ m
 sd <- sd(data_array) # Deviazione standard
 sd
 
-# Utilizzo i quantili della distribuzione normale per determinare i sottoinsiemi
+# Si usano i quantili della distribuzione normale per determinare i sottoinsiemi
 a <-  numeric(4)
 for(i in 1:4)
   a[i] <- qnorm(0.2 * i, mean = m, sd = sd)
@@ -59,8 +62,9 @@ chi2 > qchisq(alpha/2, df=r-k-1) && chi2 < qchisq(1-alpha/2, df=r-k-1)
 ################################################################################
 #----------------------------- Stima puntuale ---------------------------------#
 ################################################################################
+#------- Metodo dei momenti
 
-# Calcolo la stima puntuale della media
+# Si calcol la stima della media
 stima_mu <- mean(data_array)
 stima_mu
 
@@ -70,8 +74,8 @@ var
 n <- length(data_array) # Numero di elementi
 n
 
-# Calcolo la stima puntuale della varianza
-stima_sigma2 <- (length(data_array)-1) * var/n
+# Si calcola la stima della varianza
+stima_sigma2 <- (n-1) * var/n
 stima_sigma2
 
 ################################################################################
@@ -93,14 +97,14 @@ qt(1-alpha/2, df = n - 1)
 n <- length(data_array) # Numero di elementi
 n
 
-# Calcolo l'intervallo di confidenza
+# Si calcola l'intervallo di confidenza
 lim_inf <- mean - qt(1 - alpha/2, df = n - 1) * sd/sqrt(n)
 lim_inf
 
 lim_sup <- mean + qt(1 - alpha/2, df = n - 1) * sd/sqrt(n)
 lim_sup
 
-# Verifico se la media è compresa nell'intervallo di confidenza
+# Si verifica se la media è compresa nell'intervallo di confidenza
 mean > lim_inf && mean < lim_sup
 
 ################################################################################
@@ -118,7 +122,7 @@ n
 alpha <- 1 - 0.95
 alpha
 
-# Calcolo l'intervallo di confidenza
+# Si calcola l'intervallo di confidenza
 X2_alpha <- qchisq(alpha/2, df = n - 1)
 X2_alpha
 
@@ -131,34 +135,33 @@ lim_inf
 lim_sup <- (n - 1) * var / X2_alpha
 lim_sup
 
-# Verifico se la varianza è compresa nell'intervallo di confidenza
+# Si verifica se la varianza è compresa nell'intervallo di confidenza
 var > lim_inf && var < lim_sup
 
 ################################################################################
-#-------------------- Confronto tra due popolazioni ---------------------------#
+#------------------------ Confronto tra due popolazioni -----------------------#
 ################################################################################
 
-# Carico il dataset
 data2 <- read_excel("dataset_puliti/nascite_arrotondato.xlsx")
 
-# Elimino le colonne che non mi servono per l'analisi,
-# lascio solo la colonna del 2010 e quella dei Paesi
+# Si eliminano le colonne che non servono per l'analisi,
+# si lasciano solo la colonna del 2021 e quella dei Paesi
 data2 <- data2[, c("Country", "2010")]
 
-# Selezioni i nomi dei Paesi che nel 2021 hanno un valore inferiore a 100
+# Si selezionano i nomi dei Paesi che nel 2021 hanno un valore inferiore a 100 (mila)
 nomi_paesi <- data$Country
 
-# Seleziono gli stessi paesi nel dataset del 2010
+# Si selezionano gli stessi Paesi nel dataset del 2010
 data2 <- data2[data2$Country %in% nomi_paesi, ]
 
 View(data2)
 
-# Trasformo la colonna del 2010 in un array
+# Si converte la colonna del 2010 in un array
 data_array2 <- as.array(data2$`2010`)
 data_array2
 
-#------------------- Criterio del Chi-Quadrato --------------------------------#
-#--------- Verifico se è una distribuzione normale
+#-------------------------- Criterio del Chi-Quadrato -------------------------#
+#--------- Si verifica se è una distribuzione normale
 
 n2 <- length(data_array2) # Numero di elementi
 n2
@@ -169,7 +172,7 @@ mean2
 sd2 <- sd(data_array2) # Deviazione standard
 sd2
 
-# Utilizzo i quantili della distribuzione normale per determinare i sottoinsiemi
+# Si usano i quantili della distribuzione normale per determinare i sottoinsiemi
 a2 <-  numeric(4)
 for(i in 1:4)
   a2[i] <- qnorm(0.2 * i, mean = mean2, sd = sd2)
@@ -194,7 +197,6 @@ alpha <- 0.05
 
 # Se chi2 è compreso tra i due quantili, allora la popolazione è normale
 # altrimenti non è normale
-
 chi2 > qchisq(alpha/2, df=r2-k2-1) && chi2 < qchisq(1-alpha/2, df=r2-k2-1)
 
 #--------- Intervallo di confidenza per i valori medi con varianze NON note
@@ -219,13 +221,12 @@ sigma1
 sigma2 <- sd(data_array2)
 sigma2
 
-# Calcolo l'intervallo di confidenza
+# Si calcola l'intervallo di confidenza
 lim_inf <- mean1 - mean2 - qnorm(1 - alpha/2, mean = 0, sd = 1) * sqrt(sigma1^2/n + sigma2^2/n)
 lim_inf
 
 lim_sup <- mean1 - mean2 + qnorm(1 - alpha/2, mean = 0, sd = 1) * sqrt(sigma1^2/n + sigma2^2/n)
 lim_sup
-
 
 ################################################################################
 #------------------------- Verifica delle ipotesi -----------------------------#
@@ -233,16 +234,18 @@ lim_sup
 
 #-------- Test unilatera sinistro
 alpha <- 0.01
-mu0 <-  7000
+mu0 <-  500 # 500 mila nascite
 n <- length(data_array)
 
 qt(1 - alpha, df = n - 1)
 
 # Media 
 mean <- mean(data_array)
+mean
 
 # Deviazione standard
 sd <- sd(data_array)
+sd
 
 # Stima statistica del test considerato
 stima <- (mean - mu0)/(sd/sqrt(n))
@@ -264,7 +267,7 @@ curve(dt(x, df = 5),
       main = "Densità di Student con 19 gradi di libertà")
 text(0, 0.05, 0.99)
 text(0, 0.2, "Regione di \naccettazione")
-axis(1, c(-3, -1, 0, 1, 3), c("", "-1083.209", "", "2.539483", ""))
+axis(1, c(-3, -1, 0, 1, 3), c("", "-70.03526", "", "2.539483", ""))
 vals <- seq(1, 3, length = 100)
 x <- c(1, vals, 3, 1)
 y <- c(0, dt(vals, df = 5), 0, 0)
