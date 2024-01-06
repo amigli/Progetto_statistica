@@ -19,6 +19,13 @@ View(data)
 #       FREQUENZE RELATIVE E ASSOLUTE SULL'INTERO SET DI DATI
 #________________________________________________________________________
 
+#Si selezionano le colonne numeriche
+columns_to_convert <- names(data)[-1]
+
+#Si convertono queste colonne in formato numerico
+data[columns_to_convert] <- lapply(data[columns_to_convert], 
+                                   function(x) as.numeric(as.character(x)))
+
 #Si stampa il minimo del set di dati
 print(min(data[, -1]))
 #Si stampa il massimo del set di dati
@@ -36,11 +43,29 @@ mean(data_matrix)
 #Si calcola la deviazione standard
 sqrt(var(as.vector(data_matrix)))
 
+#Si trasforma il dataset in un vettore numerico per poter calcolare la skewness
+dati_numerici <- as.numeric(as.character(unlist(data[, -1])))
+dati_numerici
+
 #Si definiscono gli intervalli, quindi
 #tra 0 e 1.49 (1 bambino in media per donna)
 #tra 1.50 e 2.49 (2 bambini in media per donna)
 #dopo 2.50 (3 bambini in media per donna) 
 intervalli <- c(0.5, 1.5, 2.5, 3.5) 
+
+#Si calcolano le frequenze assolute per intervalli
+frequenzeA <- table(cut(dati_numerici, breaks = intervalli))
+
+#Si calcolano le frequenze assolute cumulate per l'intero set di dati tenendo
+#conto sempre degli intervalli
+cumsum(frequenzeA)
+
+#Si calcolano le frequenze relative per l'intero set di dati per intervalli 
+frequenzeR <- table(cut(dati_numerici, breaks = intervalli))/length(dati_numerici)
+
+#Si calcolano le frequenze relative cumulate per l'intero set di dati tenendo
+#conto sempre degli intervalli
+cumsum(frequenzeR)
 
 #Si calcolano quante istanze ci sono in ciascun range con un istogramma
 hist(dati_numerici, breaks = intervalli, freq = TRUE,
@@ -64,20 +89,6 @@ hist(dati_numerici, breaks = intervalli, freq = FALSE,
      col = c("red", "blue", "green"), border = "black",
      main = "Media bambini per donna tra il 2010 e il 2021",
      xlab = "Range di valori medi", ylab = "Frequenza relativa")
-
-#Si calcolano le frequenze assolute per intervalli
-frequenzeA <- table(cut(dati_numerici, breaks = intervalli))
-
-#Si calcolano le frequenze assolute cumulate per l'intero set di dati tenendo
-#conto sempre degli intervalli
-cumsum(frequenzeA)
-
-#Si calcolano le frequenze relative per l'intero set di dati per intervalli 
-frequenzeR <- table(cut(dati_numerici, breaks = intervalli))/length(dati_numerici)
-
-#Si calcolano le frequenze relative cumulate per l'intero set di dati tenendo
-#conto sempre degli intervalli
-cumsum(frequenzeR)
 
 
 #________________________________________________________________________
@@ -168,6 +179,13 @@ freqMarginaleFigliA <- margin.table(contingenza_assolute, 1)
 contingenza_relative <- cbind(frequenzeR_10_13, frequenzeR_14_17, frequenzeR_18_21)
 contingenza_relative
 
+#Frequenza relativa congiunta
+#Sarebbe la proporzione di ciascun elemento nella matrice rispetto alla 
+#somma totale degli elementi della matrice: ogni elemento viene diviso per
+#il numero totale di elementi.
+freqFigli <- prop.table(contingenza_assolute)
+freqFigli
+
 #Distribuzione di frequenza relativa marginale del numero di figli
 #È analogo a quanto fatto con le frequenze assolute, ma è con 
 #le frequenze relative
@@ -188,13 +206,6 @@ barplot(
   main = "Frequenza assoluta congiunta",
   xlab = "Numero di figli in media per donna"
 )
-
-#Frequenza relativa congiunta
-#Sarebbe la proporzione di ciascun elemento nella matrice rispetto alla 
-#somma totale degli elementi della matrice: ogni elemento viene diviso per
-#il numero totale di elementi.
-freqFigli <- prop.table(contingenza_assolute)
-freqFigli
 
 #Frequenza relativa congiunta
 #La traspongo in modo da avere su ogni barra i dati giusti
@@ -733,10 +744,6 @@ legend("topright", legend = c("Varianza", "Deviazione Standard"),
 #________________________________________________________________________
 
 #Si misura la simmetria di una distribuzione di frequenze con la skewness
-#Si trasforma il dataset in un vettore numerico per poter calcolare la skewness
-dati_numerici <- as.numeric(as.character(unlist(data[, -1])))
-dati_numerici
-
 #Si calcola la skewness
 skew <- skewness(dati_numerici)
 skew
