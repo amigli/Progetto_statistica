@@ -28,10 +28,8 @@ cor(data$'2010', data$'2021')
 plot(data$'2010', data$'2021', 
      xlab = "Nascite nel 2010", 
      ylab = "Nascite nel 2021", 
-     main = "Nascite nel 2010 vs Nascite nel 2021",
-     col = "red",
-     cex.lab = 0.8, 
-     cex.axis = 0.8)
+     main = "Retta di regressione",
+     col = "red",)
 abline(lm(data$'2021' ~ data$'2010'), col = "blue")
 
 ################################################################################
