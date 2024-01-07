@@ -12,6 +12,9 @@ data <- data[, c("Country", "2021")]
 # Si selezionano i paesi che hanno un valore nel 2021 inferiore a 100 (mila)
 data <- data[(data$`2021` < 100), ]
 
+# Si salvano i nomi dei Paesi
+nomi_paesi <- data$Country
+
 View(data)
 
 # Si converte la colonna del 2021 in un array
@@ -64,7 +67,7 @@ chi2 > qchisq(alpha/2, df=r-k-1) && chi2 < qchisq(1-alpha/2, df=r-k-1)
 ################################################################################
 #------- Metodo dei momenti
 
-# Si calcol la stima della media
+# Si calcola la stima della media
 stima_mu <- mean(data_array)
 stima_mu
 
@@ -145,13 +148,10 @@ var > lim_inf && var < lim_sup
 data2 <- read_excel("dataset_puliti/nascite_arrotondato.xlsx")
 
 # Si eliminano le colonne che non servono per l'analisi,
-# si lasciano solo la colonna del 2021 e quella dei Paesi
+# si lasciano solo la colonna del 2010 e quella dei Paesi
 data2 <- data2[, c("Country", "2010")]
 
-# Si selezionano i nomi dei Paesi che nel 2021 hanno un valore inferiore a 100 (mila)
-nomi_paesi <- data$Country
-
-# Si selezionano gli stessi Paesi nel dataset del 2010
+# Si selezionano gli stessi Paesi nel dataset del 2021 attraverso i nomi dei Paesi
 data2 <- data2[data2$Country %in% nomi_paesi, ]
 
 View(data2)

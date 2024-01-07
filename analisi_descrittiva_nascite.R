@@ -577,7 +577,7 @@ boxplot(dati_2010, dati_2021,
 summary_2010
 summary_2021
 
-# Si confrontano la mediana del primo e dell'ultimo anno e verifico se si sovrappongono
+# Si confrontano la mediana del primo e dell'ultimo anno e si verifica se si sovrappongono
 IQR_2010 <- quantile(dati_2010, 0.75) - quantile(dati_2010, 0.25)
 IQR_2010
 M1_2010 <- quantile(dati_2010, 0.5) - 1.57*IQR_2010/sqrt(length(dati_2010))
@@ -722,3 +722,4 @@ indice_pearson <- momento_4 / momento_2^2
 
 # Si calcola la curtosi campionaria
 curtosi_campionaria <- indice_pearson - 3
+curtosi_campionaria

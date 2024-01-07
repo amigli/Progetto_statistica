@@ -60,7 +60,7 @@ a
 #Si pone uguale a 5 il numero di intervalli
 r <- 5
 
-#Inizializza un vettore numerico per memorizzare le frequenze degli intervalli
+#Si inizializza un vettore numerico per memorizzare le frequenze degli intervalli
 nint <- numeric (r)
 
 #Vengono calcolate le frequenze degli intervalli

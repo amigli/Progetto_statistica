@@ -288,7 +288,7 @@ trH2
 trWithin <- trH1 + trH2
 trWithin
 
-# Calculo la misura di non omogeneita’ tra i cluster (between)
+# Si calcola la misura di non omogeneita’ tra i cluster (between)
 trBetween <- trHI - trWithin 
 trBetween/trHI # 0.9651982
 
