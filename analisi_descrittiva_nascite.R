@@ -9,7 +9,6 @@ data <- read_excel("dataset_puliti/nascite_arrotondato.xlsx")
 # Si visualizza il dataframe
 View(data)
 
-
 ################################################################################
 #------------------------------- Frequenze ------------------------------------#
 ################################################################################
@@ -342,7 +341,7 @@ ts_means <- ts(means_by_year, start = 2010, frequency = 1)
 
 # Grafico della media campionaria per anno 
 plot(ts_means, 
-     main = "Media campionaria per anno", 
+     main = "Numero medio di nascite (2010−2021)", 
      ylim = c(1130, 1400),
      xlab = "Anno", 
      ylab = "Numero di nati vivi (in migliaia)", 
