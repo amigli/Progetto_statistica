@@ -7,6 +7,7 @@
 
 #Si importano le librerie necessarie
 library(readxl)
+library(writexl)
 library(ggplot2)
 
 #Si legge il set di dati
@@ -55,10 +56,22 @@ abline(lm(data$`2021` ~ data$`2020`), col = "blue")
 #________________________________________________________________________
 
 #Si calcola la matrice delle covarianze
-cov(data[, -1])
+matrice_covarianze <- cov(data[, -1])
+
+#Si converte la matrice in un dataframe per poterla salvare in Excel
+covarianze_df <- as.data.frame(as.matrix(matrice_covarianze))
+
+#Si salva la matrice delle covarianze in un file Excel
+write_xlsx(covarianze_df, "matrice_covarianze_fertilita.xlsx")
 
 #Si calcola la matrice delle correlazioni
-cor(data[, -1])
+matrice_correlazioni <- cor(data[, -1])
+
+#Si converte la matrice in un dataframe per poterla salvare in Excel
+correlazioni_df <- as.data.frame(as.matrix(matrice_correlazioni))
+
+#Si salva la matrice delle correlazioni in un file Excel
+write_xlsx(correlazioni_df, "matrice_correlazioni_fertilita.xlsx")
 
 #Si esegue la regressione lineare
 #La variabile dipendente è l'anno 2021
