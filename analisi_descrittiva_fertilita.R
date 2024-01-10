@@ -11,7 +11,7 @@ library(readxl)
 library(e1071)
 
 #Si legge il file Excel
-data <- read_excel("C:/Users/migli/Desktop/Università/Magistrale/Statistica e Analisi dei Dati/progetto_statistica/dataset_puliti/fertilita_pulito.xlsx")
+data <- read_excel("dataset_puliti/fertilita_arrotondato.xlsx")
 View(data)
 
 
@@ -253,7 +253,7 @@ media_per_anno
 media_anni <- ts(media_per_anno, start = 2010, frequency = 1)
 
 #Si crea il grafico relativo a questa serie temporale
-plot(media_anni, main="Numero medio di bambini nati per donna (2010-2021)", 
+plot(media_anni, main="Numero medio di bambini per donna (2010-2021)", 
      xlab="Anno", ylab="Valore medio", col="blue", type="o")
 
 
@@ -582,7 +582,7 @@ moda_per_anno
 moda_anni <- ts(moda_per_anno, start = 2010, frequency = 1)
 
 #Si crea il grafico relativo a questa serie temporale
-plot(moda_anni, main="Moda di bambini nati per donna (2010-2021)", 
+plot(moda_anni, main="Moda del numero di bambini per donna (2010-2021)", 
      xlab="Anno", ylab="Valore medio", col="blue", type="o")
 
 
